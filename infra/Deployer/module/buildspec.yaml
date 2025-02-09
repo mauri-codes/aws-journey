@@ -1,0 +1,17 @@
+version: 0.2
+
+phases:
+  install:
+    commands:
+      - terragrunt --version
+      - git clone https://github.com/$REPO
+      # - curl -O https://github.com/gruntwork-io/terragrunt/releases/download/v0.73.6/terragrunt_linux_amd64
+      # - mv terragrunt_linux_amd64 terragrunt
+      # - chmod u+x terragrunt
+      # - mv terragrunt /usr/local/bin/terragrunt
+      - terragrunt --version
+  build:
+    commands:
+      - cd aws-journey/labs/deploy_lab
+      - ./deploy_lab
+      - terraform --version

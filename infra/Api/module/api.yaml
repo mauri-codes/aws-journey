@@ -1,0 +1,45 @@
+openapi: 3.0.3
+info:
+  title: AWS Journey API
+
+paths:
+  /runDeployer:
+    post:
+      summary: Deploys infrastructure in a registered account
+      requestBody:
+        content:
+          "application/json": 
+            schema:
+              $ref: '#/components/schemas/DeploymentData'
+        required: true
+      x-amazon-apigateway-integration:
+        uri: "arn:aws:apigateway:${aws_region}:lambda:path/2015-03-31/functions/arn:aws:lambda:${aws_region}:${account_id}:function:${run_deployer_name}/invocations"
+        passthroughBehavior: "when_no_match"
+        httpMethod: "POST"
+        type: "aws_proxy"
+        contentHandling: "CONVERT_TO_TEXT"
+    get:
+      summary: Display Hello World
+      x-amazon-apigateway-integration:
+        uri: "arn:aws:apigateway:${aws_region}:lambda:path/2015-03-31/functions/arn:aws:lambda:${aws_region}:${account_id}:function:${hello_world_name}/invocations"
+        passthroughBehavior: "when_no_match"
+        httpMethod: "POST"
+        type: "aws_proxy"
+        contentHandling: "CONVERT_TO_TEXT"
+
+components:
+  schemas:
+    DeploymentData:
+      type: object
+      required: [Action, UserId, LabId]
+      properties:
+        Action:
+          type: string
+        UserId:
+          type: string
+        LabId:
+          type: string
+        RunId:
+          type: string
+    Empty:
+      type: "object"

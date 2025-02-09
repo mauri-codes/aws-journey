@@ -1,0 +1,11 @@
+.terraform
+.terraform.lock.hcl
+terraform.tfstate
+terraform.tfstate.backup
+var.txt
+backend.tf
+.DS_Store
+provider.tf
+deploy_lab_script
+bootstrap
+.DS_Store
