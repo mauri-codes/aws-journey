@@ -1,0 +1,27 @@
+Name: S3Website
+Input:
+  - S3BucketName
+  - CFDistributionName
+  - Domain
+Schema:
+  Resources:
+    Website:
+      type: Bucket
+      identifier: $[S3BucketName]
+      Tags:
+        - Part: 1
+      expectations:
+        Website:
+          IndexDocument: "index.html"
+          ErrorDocument: "index.html"
+        Policy:
+          Statements:
+            - Sid: PublicBucket
+              Effect: Allow
+              Principal: "*"
+              Action:
+                - "s3:GetObject"
+              Resource:
+              - "$[Website.Arn]/*"
+        Files:
+          - Key: "index.html"
