@@ -1,0 +1,14 @@
+version: 0.2
+
+env:
+  variables:
+    Action: "DEPLOY"
+    Lab: "S3Website"
+    StateBucket: ""
+    StateTable: ""
+
+phases:
+  build:
+    commands:
+      - cd ~/aws-journey/labs
+      - ./deploy_lab.sh
