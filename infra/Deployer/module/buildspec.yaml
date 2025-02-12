@@ -1,14 +1,14 @@
 version: 0.2
 
-env:
-  variables:
-    Action: "DEPLOY"
-    Lab: "S3Website"
-    StateBucket: ""
-    StateTable: ""
-
 phases:
+  install:
+    commands:
+      - echo $Repo
+      - echo $Action
+      - git clone https://github.com/$Repo
   build:
     commands:
-      - cd ~/aws-journey/labs
-      - ./deploy_lab.sh
+      - cd aws-journey/labs
+      - ls
+      - terraform --version
+      # - ./deploy_lab.sh ${Action} ${Lab} ${StateBucket} ${StateTable}
