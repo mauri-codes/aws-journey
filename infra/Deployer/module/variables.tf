@@ -5,3 +5,11 @@ variable "build_timeout" {
 variable "repo" {
   type = string
 }
+
+variable "state_bucket" {
+  type = string
+}
+
+variable "state_table" {
+  type = string
+}

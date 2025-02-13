@@ -1,4 +1,4 @@
-#export $(xargs < var.txt)
+# export $(xargs < var.txt)
 variable "bucket_name" {
   type = string
 }

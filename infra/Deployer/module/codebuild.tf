@@ -27,12 +27,16 @@ resource "aws_codebuild_project" "example" {
       value = ""
     }
     environment_variable {
-      name  = "StateBucket"
+      name  = "UserId"
       value = ""
     }
     environment_variable {
+      name  = "StateBucket"
+      value = var.state_bucket
+    }
+    environment_variable {
       name  = "StateTable"
-      value = ""
+      value = var.state_table
     }
   }
 
