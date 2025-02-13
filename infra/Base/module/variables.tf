@@ -16,5 +16,5 @@ variable "write_capacity" {
 
 variable "bucket_force_destroy" {
   default = true
-  type = bool
+  type    = bool
 }

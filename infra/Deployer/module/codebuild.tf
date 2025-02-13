@@ -15,33 +15,33 @@ resource "aws_codebuild_project" "example" {
     image_pull_credentials_type = "CODEBUILD"
 
     environment_variable {
-      name  = "Action"
+      name  = "ACTION"
       value = "Deploy"
     }
     environment_variable {
-      name  = "Repo"
+      name  = "REPO"
       value = var.repo
     }
     environment_variable {
-      name  = "Lab"
+      name  = "LAB_ID"
       value = ""
     }
     environment_variable {
-      name  = "UserId"
+      name  = "USER_ID"
       value = ""
     }
     environment_variable {
-      name  = "StateBucket"
+      name  = "USER_STATE_BUCKET"
       value = var.state_bucket
     }
     environment_variable {
-      name  = "StateTable"
+      name  = "USER_STATE_TABLE"
       value = var.state_table
     }
   }
 
   source {
-    type            = "NO_SOURCE"
+    type      = "NO_SOURCE"
     buildspec = file("${path.module}/buildspec.yaml")
   }
 }

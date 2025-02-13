@@ -3,12 +3,12 @@ version: 0.2
 phases:
   install:
     commands:
-      - echo $Repo
-      - echo $Action
+      - echo $REPO
+      - echo $ACTION
       - git clone https://github.com/$Repo
   build:
     commands:
       - cd aws-journey/labs
-      - ls
+      - ./deploy_lab.sh
       - terraform --version
       # - ./deploy_lab.sh ${Action} ${Lab} ${StateBucket} ${StateTable}

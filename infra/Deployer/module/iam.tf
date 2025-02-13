@@ -1,7 +1,7 @@
 
 module "codebuild_role" {
-  source = "../../z_common/assume_role"
-  service = "codebuild"
+  source    = "../../z_common/assume_role"
+  service   = "codebuild"
   role_name = local.role_name
 }
 

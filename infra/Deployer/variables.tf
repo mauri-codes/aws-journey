@@ -1,4 +1,4 @@
 variable "repo" {
-  type = string
+  type    = string
   default = "mauri-codes/aws-journey"
 }

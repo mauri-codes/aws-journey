@@ -1,8 +1,4 @@
 # export $(xargs < var.txt)
-variable "bucket_name" {
-  type = string
-}
-
-variable "table_name" {
+variable "app_name" {
   type = string
 }
