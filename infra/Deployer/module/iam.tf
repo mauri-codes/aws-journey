@@ -35,6 +35,19 @@ data "aws_iam_policy_document" "codebuild_policy" {
   }
 
   statement {
+    effect = "Allow"
+    actions = [
+      "dynamodb:Query",
+      "dynamodb:PutItem",
+      "dynamodb:UpdateItem",
+    ]
+    resources = [
+      "arn:aws:dynamodb:${local.region}:${local.account_id}:table/${var.app_table}",
+      "arn:aws:dynamodb:${local.region}:${local.account_id}:table/${var.state_table}"
+    ]
+  }
+
+  statement {
     effect  = "Allow"
     actions = ["sts:AssumeRole"]
     resources = [

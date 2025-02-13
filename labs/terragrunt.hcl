@@ -7,7 +7,7 @@ remote_state {
   }
   config = {
     bucket         = "${get_env("USER_STATE_BUCKET")}"
-    key            = "users_state/${path_relative_to_include()}.tfstate"
+    key            = "users_state/${get_env("USER_ID")}/${get_env("LAB_ID")}/${get_env("RUN_ID")}_${get_env("CURRENT_DATE")}.tfstate"
     region         = "us-east-1"
     encrypt        = true
     dynamodb_table = "${get_env("USER_STATE_TABLE")}"
@@ -20,30 +20,30 @@ generate "provider" {
   contents = <<EOF
 provider "aws" {
   alias = "account1_A"
+  region = "${get_env("ACCOUNT_1_REGION_A")}"
   assume_role {
     role_arn = "${get_env("ACCOUNT_1_ROLE")}"
-    region = "${get_env("ACCOUNT_1_REGION_A")}"
   }
 }
 provider "aws" {
   alias = "account1_B"
+  region = "${get_env("ACCOUNT_1_REGION_B")}"
   assume_role {
     role_arn = "${get_env("ACCOUNT_1_ROLE")}"
-    region = "${get_env("ACCOUNT_1_REGION_B")}"
   }
 }
 provider "aws" {
   alias = "account2_A"
+  region = "${get_env("ACCOUNT_2_REGION_A")}"
   assume_role {
     role_arn = "${get_env("ACCOUNT_2_ROLE")}"
-    region = "${get_env("ACCOUNT_2_REGION_A")}"
   }
 }
 provider "aws" {
   alias = "account2_B"
+  region = "${get_env("ACCOUNT_2_REGION_B")}"
   assume_role {
     role_arn = "${get_env("ACCOUNT_2_ROLE")}"
-    region = "${get_env("ACCOUNT_2_REGION_B")}"
   }
 }
 EOF

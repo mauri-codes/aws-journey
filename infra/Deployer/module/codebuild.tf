@@ -38,6 +38,10 @@ resource "aws_codebuild_project" "example" {
       name  = "USER_STATE_TABLE"
       value = var.state_table
     }
+    environment_variable {
+      name  = "APP_TABLE"
+      value = var.app_table
+    }
   }
 
   source {

@@ -13,3 +13,7 @@ variable "state_bucket" {
 variable "state_table" {
   type = string
 }
+
+variable "app_table" {
+  type = string
+}
