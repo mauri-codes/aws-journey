@@ -20,35 +20,24 @@ func main() {
 	// USER_ID := os.Getenv("USER_ID")
 	APP_TABLE := "aws-journey"
 	USER_ID := "test1"
-
 	cfg, err := config.LoadDefaultConfig(context.TODO())
 	if err != nil {
 		log.Fatalf("failed to load configuration, %v", err)
 	}
 	dbClient := dynamodb.NewFromConfig(cfg)
-
-	accountData, err := aws_dynamo.Query[data_schemas.UserAccounts](
-		dbClient,
-		&table_key.TableData{
-			TableName: APP_TABLE,
-			HashKey: table_key.TableKey{
-				Key:    "pk",
-				Value:  "user_" + USER_ID,
-				Action: table_key.EQUALS,
-			},
-			SortKey: table_key.TableKey{
-				Key:    "sk",
-				Value:  "accounts",
-				Action: table_key.EQUALS,
-			},
-		},
-	)
-
+	userAccounts, err := GetAccountData(dbClient, APP_TABLE, USER_ID)
 	if err != nil {
 		log.Printf("Error: %v\n", err)
-		log.Fatal(err)
 	}
-	Pr(accountData)
+	Pr(userAccounts)
+	err = os.Setenv("ACCOUNT1_ROLE", userAccounts.Account_A)
+	if err != nil {
+		log.Fatalf("err %v", err)
+	}
+	err = os.Setenv("REGION_A", userAccounts.Region_A)
+	if err != nil {
+		log.Fatalf("err %v", err)
+	}
 
 	fmt.Print("Enter your name: ")
 	x := os.Getenv("TF_VAR_bucket_name")
@@ -57,6 +46,29 @@ func main() {
 	fmt.Println(x)
 	fmt.Println(fi)
 	fmt.Println(err)
+}
+
+func GetAccountData(dbClient *dynamodb.Client, table string, user string) (data_schemas.UserAccounts, error) {
+	userAccounts, err := aws_dynamo.GetItem[data_schemas.UserAccounts](
+		dbClient,
+		&table_key.TableData{
+			TableName: table,
+			HashKey: table_key.TableKey{
+				Key:   "pk",
+				Value: "user_" + user,
+			},
+			SortKey: table_key.TableKey{
+				Key:   "sk",
+				Value: "accounts",
+			},
+		},
+	)
+	if err == nil {
+		if userAccounts.Account_B == "" {
+			userAccounts.Account_B = userAccounts.Account_A
+		}
+	}
+	return userAccounts, err
 }
 
 func Pr(data any) {

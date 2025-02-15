@@ -11,7 +11,7 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/dynamodb"
 )
 
-func Query[T any](client dynamodb.QueryAPIClient, table *table_key.TableData) ([]T, error) {
+func Query[T any](client *dynamodb.Client, table *table_key.TableData) ([]T, error) {
 	hash := expression.Key(table.HashKey.Key).Equal(expression.Value(table.HashKey.Value))
 	var sort expression.KeyConditionBuilder
 	if table.SortKey.Action == table_key.BEGINS_WITH {
