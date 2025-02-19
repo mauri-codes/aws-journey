@@ -1,0 +1,44 @@
+{
+   "Comment": "User Deployment steps",
+   "StartAt": "StartDeployment",
+   "States": {
+      "StartDeployment": {
+         "Type": "Task",
+         "Resource": "${StartDeploymentFunctionArn}",
+         "Next": "Deploy",
+         "Catch": [{
+            "ErrorEquals": ["States.ALL"],
+            "ResultPath": "$",
+            "Next": "ErrorHandler"
+         }]
+      },
+      "Deploy": {
+         "Type" : "Task",
+         "Resource": "arn:aws:states:::codebuild:StartBuild.sync",
+         "Next": "CloseDeployment",
+         "Parameters": {
+            "ProjectName": "${DeployCodebuildProjectArn}"
+         },
+         "Catch": [{
+            "ErrorEquals": ["States.ALL"],
+            "ResultPath": "$",
+            "Next": "ErrorHandler"
+         }]
+      },
+      "CloseDeployment": {
+         "Type" : "Task",
+         "Resource": "${CloseDeploymentFunctionArn}",
+         "End": true,
+         "Catch": [{
+            "ErrorEquals": ["States.ALL"],
+            "ResultPath": "$",
+            "Next": "ErrorHandler"
+         }]
+      },
+      "ErrorHandler": {
+         "Type" : "Task",
+         "Resource": "${ErrorHandlerArn}",
+         "End": true
+      }
+   }
+}

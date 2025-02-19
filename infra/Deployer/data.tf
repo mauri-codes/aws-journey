@@ -1,3 +1,6 @@
+data "aws_caller_identity" "current" {}
+data "aws_region" "current" {}
+
 data "aws_ssm_parameter" "state_bucket_name" {
   name = "/Infra/State/Bucket/Name"
 }
