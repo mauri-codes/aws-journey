@@ -1,10 +1,17 @@
-resource "aws_ecr_repository" "repo" {
-  name                 = data.aws_ssm_parameter.app_name.value
-  image_tag_mutability = "MUTABLE"
+module "repo" {
+  source              = "./module"
+  deployer_name       = "lab-deployer"
+  codebuild_role_name = local.codebuild_role_name
 }
 
-resource "aws_ssm_parameter" "app_name" {
+resource "aws_ssm_parameter" "repo_url" {
   name  = "/Infra/Ecr/RepoUrl"
   type  = "String"
-  value = aws_ecr_repository.repo.repository_url
+  value = module.repo.repo_url
+}
+
+resource "aws_ssm_parameter" "repo_domain" {
+  name  = "/Infra/Ecr/RepoDomain"
+  type  = "String"
+  value = local.repo_domain
 }

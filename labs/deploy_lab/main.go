@@ -22,16 +22,15 @@ func main() {
 	err = Deployment(dbClient, input)
 	if err != nil {
 		log.Fatal(err.Error())
-		CreateFailedStatus(dbClient, input)
 	}
 }
 
 func Deployment(dbClient *dynamodb.Client, input *data_schemas.InputData) error {
-	err := aws_dynamo.PutItem(dbClient, input.PutDeployStatus)
-	if err != nil {
-		return err
-	}
-	err = process.SetAccountData(dbClient, input.AccountsQuery, input.RunId)
+	// err := aws_dynamo.PutItem(dbClient, input.PutDeployStatus)
+	// if err != nil {
+	// 	return err
+	// }
+	err := process.SetAccountData(dbClient, input.AccountsQuery, input.RunId)
 	if err != nil {
 		return err
 	}
@@ -46,8 +45,9 @@ func Deployment(dbClient *dynamodb.Client, input *data_schemas.InputData) error 
 	return aws_dynamo.UpdateItem(dbClient, input.UpdateDeployStatus)
 }
 
-func CreateFailedStatus(client *dynamodb.Client, input *data_schemas.InputData) {
+func CreateFailedStatus(client *dynamodb.Client, input *data_schemas.InputData, err error) {
 	updateStatusBuild := expression.Set(expression.Name("Status"), expression.Value(data_schemas.FAILED))
+	updateStatusBuild.Add(expression.Name("ErrorMessage"), expression.Value(err.Error()))
 	updateStatusExp, _ := expression.NewBuilder().WithUpdate(updateStatusBuild).Build()
 	input.UpdateDeployStatus.Expression = updateStatusExp
 	aws_dynamo.UpdateItem(client, input.UpdateDeployStatus)

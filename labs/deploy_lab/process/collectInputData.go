@@ -24,6 +24,7 @@ func CollectInputData() *data_schemas.InputData {
 	RUN_ID := os.Getenv("RUN_ID")
 	USER_STATE_BUCKET := os.Getenv("USER_STATE_BUCKET")
 	USER_STATE_TABLE := os.Getenv("USER_STATE_TABLE")
+	CODEBUILD_BUILD_ID := os.Getenv("CODEBUILD_BUILD_ID")
 	if RUN_ID == "" {
 		RUN_ID = utils.StringWithCharset(3, utils.UPPER_CASE_LETTERS) + "-" + utils.StringWithCharset(3, utils.NUMBERS)
 	}
@@ -50,6 +51,7 @@ func CollectInputData() *data_schemas.InputData {
 		UserId:      USER_ID,
 		RunId:       RUN_ID,
 		CurrentDate: currentDate,
+		CodebuildId: CODEBUILD_BUILD_ID,
 		AccountsQuery: &table_key.TableData[any]{
 			TableName: APP_TABLE,
 			HashKey: table_key.TableKey{
@@ -64,10 +66,15 @@ func CollectInputData() *data_schemas.InputData {
 		PutDeployStatus: &table_key.TableData[data_schemas.DeployStatus]{
 			TableName: APP_TABLE,
 			Data: data_schemas.DeployStatus{
-				PK:     userKey + "#" + labKey,
-				SK:     runKey + "#" + ACTION,
-				Status: data_schemas.RUNNING,
-				Date:   currentDate,
+				PK:          userKey + "#" + labKey,
+				SK:          runKey + "#" + ACTION,
+				Status:      data_schemas.RUNNING,
+				Date:        currentDate,
+				CodebuildId: CODEBUILD_BUILD_ID,
+				LabId:       LAB_ID,
+				UserId:      USER_ID,
+				RunId:       RUN_ID,
+				Action:      ACTION,
 			},
 		},
 		UpdateDeployStatus: &table_key.TableData[data_schemas.DeployStatus]{

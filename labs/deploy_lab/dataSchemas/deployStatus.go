@@ -7,8 +7,13 @@ const (
 )
 
 type DeployStatus struct {
-	PK     string `dynamodbav:"pk"`
-	SK     string `dynamodbav:"sk"`
-	Status string
-	Date   string
+	PK          string `dynamodbav:"pk"`
+	SK          string `dynamodbav:"sk"`
+	Status      string
+	Date        string
+	CodebuildId string
+	UserId      string
+	LabId       string
+	RunId       string
+	Action      string
 }

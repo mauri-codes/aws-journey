@@ -10,13 +10,13 @@ resource "aws_codebuild_project" "example" {
 
   environment {
     compute_type                = "BUILD_GENERAL1_SMALL"
-    image                       = local.codebuild_image
+    image                       = var.codebuild_image
     type                        = "LINUX_CONTAINER"
-    image_pull_credentials_type = "CODEBUILD"
+    image_pull_credentials_type = "SERVICE_ROLE"
 
     environment_variable {
       name  = "ACTION"
-      value = "APPLY"
+      value = "DESTROY"
     }
     environment_variable {
       name  = "REPO"
@@ -24,15 +24,15 @@ resource "aws_codebuild_project" "example" {
     }
     environment_variable {
       name  = "LAB_ID"
-      value = ""
+      value = "S3Website"
     }
     environment_variable {
       name  = "USER_ID"
-      value = ""
+      value = "test1"
     }
     environment_variable {
       name  = "RUN_ID"
-      value = ""
+      value = "SGS-289"
     }
     environment_variable {
       name  = "USER_STATE_BUCKET"
@@ -45,6 +45,10 @@ resource "aws_codebuild_project" "example" {
     environment_variable {
       name  = "APP_TABLE"
       value = var.app_table
+    }
+    environment_variable {
+      name  = "TF_VAR_bucket_name"
+      value = "amazingbucket12312333366777"
     }
   }
 

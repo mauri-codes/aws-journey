@@ -50,7 +50,7 @@ data "aws_iam_policy_document" "codebuild_policy" {
       "arn:aws:dynamodb:${local.region}:${local.account_id}:table/${var.user_state_table}"
     ]
   }
-  
+
   statement {
     effect = "Allow"
     actions = [
@@ -76,6 +76,28 @@ data "aws_iam_policy_document" "codebuild_policy" {
       "arn:aws:s3:::${var.state_bucket}/*"
     ]
   }
+
+  statement {
+    effect = "Allow"
+    actions = [
+      "ecr:BatchGetImage",
+      "ecr:GetDownloadUrlForLayer"
+    ]
+    resources = [
+      var.ecr_repo_arn
+    ]
+  }
+
+  statement {
+    effect = "Allow"
+    actions = [
+      "ecr:GetAuthorizationToken",
+    ]
+    resources = [
+      "*"
+    ]
+  }
+
 
   statement {
     effect  = "Allow"

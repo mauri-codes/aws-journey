@@ -12,4 +12,5 @@ type InputData struct {
 	UpdateUserState    *table_key.TableData[any]
 	UpdateDeployStatus *table_key.TableData[DeployStatus]
 	CurrentDate        string
+	CodebuildId        string
 }

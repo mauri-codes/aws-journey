@@ -6,7 +6,12 @@ resource "aws_s3_bucket" "website_bucket" {
 resource "aws_s3_bucket_policy" "public_access" {
   bucket = aws_s3_bucket.website_bucket.id
   policy = data.aws_iam_policy_document.public_access.json
-  depends_on = [ aws_s3_bucket_public_access_block.public_access ]
+  depends_on = [ time_sleep.wait_2_seconds ]
+}
+
+resource "time_sleep" "wait_2_seconds" {
+  depends_on = [aws_s3_bucket_public_access_block.public_access]
+  create_duration = "2s"
 }
 
 data "aws_iam_policy_document" "public_access" {
