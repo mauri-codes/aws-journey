@@ -1,7 +1,7 @@
-output "codebuild_role_arn" {
-  value = module.deployer.codebuild_role_arn
+output "codebuild_project_role_arn" {
+  value = module.codebuild_project.codebuild_role_arn
 }
 
-output "codebuild_role_name" {
-  value = module.deployer.codebuild_role_name
+output "codebuild_project_role_name" {
+  value = module.codebuild_project.codebuild_role_name
 }

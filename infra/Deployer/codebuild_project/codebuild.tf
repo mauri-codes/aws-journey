@@ -16,7 +16,7 @@ resource "aws_codebuild_project" "example" {
 
     environment_variable {
       name  = "ACTION"
-      value = "DESTROY"
+      value = ""
     }
     environment_variable {
       name  = "REPO"
@@ -24,15 +24,15 @@ resource "aws_codebuild_project" "example" {
     }
     environment_variable {
       name  = "LAB_ID"
-      value = "S3Website"
+      value = ""
     }
     environment_variable {
       name  = "USER_ID"
-      value = "test1"
+      value = ""
     }
     environment_variable {
       name  = "RUN_ID"
-      value = "SGS-289"
+      value = ""
     }
     environment_variable {
       name  = "USER_STATE_BUCKET"
@@ -45,10 +45,6 @@ resource "aws_codebuild_project" "example" {
     environment_variable {
       name  = "APP_TABLE"
       value = var.app_table
-    }
-    environment_variable {
-      name  = "TF_VAR_bucket_name"
-      value = "amazingbucket12312333366777"
     }
   }
 

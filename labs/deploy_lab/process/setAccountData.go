@@ -2,17 +2,26 @@ package process
 
 import (
 	data_schemas "deploy_lab/dataSchemas"
-	aws_dynamo "deploy_lab/dynamodb"
-	table_key "deploy_lab/dynamodb/TableKey"
 	"os"
 
-	"github.com/aws/aws-sdk-go-v2/service/dynamodb"
+	deployment_common "github.com/mauri-codes/aws-journey/lambdas/deployer/Common"
+	"github.com/mauri-codes/go-modules/aws/dynamo"
 )
 
-func SetAccountData(dbClient *dynamodb.Client, tableData *table_key.TableData[any], runId string) error {
-	userAccounts, err := aws_dynamo.GetItem[data_schemas.UserAccounts](
-		dbClient,
-		tableData,
+func SetAccountData(input *data_schemas.InputData) error {
+	var err error
+	var userAccounts *data_schemas.UserAccounts
+	var deploymentData *deployment_common.DeploymentRun
+	userAccounts, err = dynamo.GetItem(
+		input.AppTable,
+		input.GetAccountData,
+	)
+	if err != nil {
+		return err
+	}
+	deploymentData, err = dynamo.GetItem(
+		input.AppTable,
+		input.GetDeploymentData,
 	)
 	if err != nil {
 		return err
@@ -36,9 +45,15 @@ func SetAccountData(dbClient *dynamodb.Client, tableData *table_key.TableData[an
 	if err != nil {
 		return err
 	}
-	err = os.Setenv("RUN_ID", runId)
+	err = os.Setenv("RUN_ID", input.RunId)
 	if err != nil {
 		return err
+	}
+	for key, val := range deploymentData.Params {
+		err = os.Setenv(key, val)
+		if err != nil {
+			return err
+		}
 	}
 	return nil
 }

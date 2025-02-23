@@ -3,34 +3,29 @@ package main
 import (
 	"context"
 	data_schemas "deploy_lab/dataSchemas"
-	aws_dynamo "deploy_lab/dynamodb"
 	"deploy_lab/process"
 	"log"
 
 	"github.com/aws/aws-sdk-go-v2/config"
-	"github.com/aws/aws-sdk-go-v2/feature/dynamodb/expression"
 	"github.com/aws/aws-sdk-go-v2/service/dynamodb"
+	"github.com/mauri-codes/go-modules/aws/dynamo"
 )
 
 func main() {
-	input := process.CollectInputData()
 	cfg, err := config.LoadDefaultConfig(context.TODO())
 	if err != nil {
 		log.Fatalf("Failed to load configuration, %v", err)
 	}
 	dbClient := dynamodb.NewFromConfig(cfg)
-	err = Deployment(dbClient, input)
+	input := process.CollectInputData(dbClient)
+	err = Deployment(input)
 	if err != nil {
 		log.Fatal(err.Error())
 	}
 }
 
-func Deployment(dbClient *dynamodb.Client, input *data_schemas.InputData) error {
-	// err := aws_dynamo.PutItem(dbClient, input.PutDeployStatus)
-	// if err != nil {
-	// 	return err
-	// }
-	err := process.SetAccountData(dbClient, input.AccountsQuery, input.RunId)
+func Deployment(input *data_schemas.InputData) error {
+	err := process.SetAccountData(input)
 	if err != nil {
 		return err
 	}
@@ -38,17 +33,17 @@ func Deployment(dbClient *dynamodb.Client, input *data_schemas.InputData) error 
 	if err != nil {
 		return err
 	}
-	err = aws_dynamo.UpdateItem(dbClient, input.UpdateUserState)
+	err = dynamo.UpdateItem(input.UserStateTable, input.UpdateUserState)
 	if err != nil {
 		return err
 	}
-	return aws_dynamo.UpdateItem(dbClient, input.UpdateDeployStatus)
+	return nil
 }
 
-func CreateFailedStatus(client *dynamodb.Client, input *data_schemas.InputData, err error) {
-	updateStatusBuild := expression.Set(expression.Name("Status"), expression.Value(data_schemas.FAILED))
-	updateStatusBuild.Add(expression.Name("ErrorMessage"), expression.Value(err.Error()))
-	updateStatusExp, _ := expression.NewBuilder().WithUpdate(updateStatusBuild).Build()
-	input.UpdateDeployStatus.Expression = updateStatusExp
-	aws_dynamo.UpdateItem(client, input.UpdateDeployStatus)
-}
+// func CreateFailedStatus(client *dynamodb.Client, input *data_schemas.InputData, err error) {
+// 	updateStatusBuild := expression.Set(expression.Name("Status"), expression.Value(data_schemas.FAILED))
+// 	updateStatusBuild.Add(expression.Name("ErrorMessage"), expression.Value(err.Error()))
+// 	updateStatusExp, _ := expression.NewBuilder().WithUpdate(updateStatusBuild).Build()
+// 	input.UpdateDeployStatus.Expression = updateStatusExp
+// 	aws_dynamo.UpdateItem(client, input.UpdateDeployStatus)
+// }

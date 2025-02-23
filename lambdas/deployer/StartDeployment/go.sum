@@ -40,6 +40,10 @@ github.com/davecgh/go-spew v1.1.1 h1:vj9j/u1bqnvCEfJOwUhtlOARqs3+rkHYY13jYWTU97c
 github.com/davecgh/go-spew v1.1.1/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
 github.com/mauri-codes/go-modules/aws/dynamo v0.0.0-20250220193710-364c388dfabf h1:wYAS6mICpCCWpsmQZQEoElqgdeQZTFc/Dfgmde0SZ48=
 github.com/mauri-codes/go-modules/aws/dynamo v0.0.0-20250220193710-364c388dfabf/go.mod h1:ktlbsWB0G79NBlIdg52SJ/mLTxVFd9otZQzoy7CNrXw=
+github.com/mauri-codes/go-modules/aws/dynamo v0.0.0-20250221193406-8abf72f6f6a1 h1:GG1od69sbXJKdAilQzxP9z47tv0Ad0gNnq4Fsr3Pd0Q=
+github.com/mauri-codes/go-modules/aws/dynamo v0.0.0-20250221193406-8abf72f6f6a1/go.mod h1:ktlbsWB0G79NBlIdg52SJ/mLTxVFd9otZQzoy7CNrXw=
+github.com/mauri-codes/go-modules/utils v0.0.0-20250221193406-8abf72f6f6a1 h1:6NHWuSdcK0qS/NDqFqXtzLfp4kfKNBLHuEq+jM/rf9o=
+github.com/mauri-codes/go-modules/utils v0.0.0-20250221193406-8abf72f6f6a1/go.mod h1:PMFw+FhaOAtdt1xmxrEgtEapxevEB7NDaN/SIQJIJRg=
 github.com/pmezard/go-difflib v1.0.0 h1:4DBwDE0NGyQoBHbLQYPwSUPoCMWR5BEzIk/f1lZbAQM=
 github.com/pmezard/go-difflib v1.0.0/go.mod h1:iKH77koFhYxTK1pcRnkKkqfTogsbg7gZNVY4sRDYZ/4=
 github.com/stretchr/testify v1.7.2 h1:4jaiDzPyXQvSd7D0EjG45355tLlV3VOECpq10pLC+8s=

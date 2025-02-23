@@ -4,8 +4,12 @@
    "States": {
       "StartDeployment": {
          "Type": "Task",
-         "Resource": "${StartDeploymentFunctionArn}",
+         "Resource": "arn:aws:states:::lambda:invoke",
          "Next": "Deploy",
+         "Parameters": {
+            "FunctionName": "${StartDeploymentFunctionArn}",
+            "Payload.$": "$"
+         },
          "Catch": [{
             "ErrorEquals": ["States.ALL"],
             "ResultPath": "$",
@@ -14,10 +18,31 @@
       },
       "Deploy": {
          "Type" : "Task",
-         "Resource": "arn:aws:states:::codebuild:StartBuild.sync",
+         "Resource": "arn:aws:states:::codebuild:startBuild",
          "Next": "CloseDeployment",
          "Parameters": {
-            "ProjectName": "${DeployCodebuildProjectArn}"
+            "ProjectName": "${DeployCodebuildProjectArn}",
+            "EnvironmentVariablesOverride": [{
+               "Name": "ACTION",
+               "Type": "PLAINTEXT",
+               "Value.$": "$.Payload.Action"
+            },{
+               "Name": "LAB_ID",
+               "Type": "PLAINTEXT",
+               "Value.$": "$.Payload.LabId"
+            },{
+               "Name": "USER_ID",
+               "Type": "PLAINTEXT",
+               "Value.$": "$.Payload.UserId"
+            },{
+               "Name": "RUN_ID",
+               "Type": "PLAINTEXT",
+               "Value.$": "$.Payload.RunId"
+            },{
+               "Name": "DEPLOY_PARAMS",
+               "Type": "PLAINTEXT",
+               "Value.$": "$.Payload.Params"
+            }]
          },
          "Catch": [{
             "ErrorEquals": ["States.ALL"],
@@ -27,7 +52,11 @@
       },
       "CloseDeployment": {
          "Type" : "Task",
-         "Resource": "${CloseDeploymentFunctionArn}",
+         "Resource": "arn:aws:states:::lambda:invoke",
+         "Parameters": {
+            "FunctionName": "${CloseDeploymentFunctionArn}",
+            "Payload.$": "$"
+         },
          "End": true,
          "Catch": [{
             "ErrorEquals": ["States.ALL"],
@@ -37,7 +66,11 @@
       },
       "ErrorHandler": {
          "Type" : "Task",
-         "Resource": "${ErrorHandlerArn}",
+         "Resource": "arn:aws:states:::lambda:invoke",
+         "Parameters": {
+            "FunctionName": "${ErrorHandlerArn}",
+            "Payload.$": "$"
+         },
          "End": true
       }
    }

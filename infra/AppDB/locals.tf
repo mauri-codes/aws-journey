@@ -1,3 +1,4 @@
 locals {
-  app_name = data.aws_ssm_parameter.app_name.value
+  app_name    = data.aws_ssm_parameter.app_name.value
+  table_label = "AppTable"
 }

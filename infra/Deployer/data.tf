@@ -39,3 +39,12 @@ data "terraform_remote_state" "docker_repo" {
     region = "us-east-1"
   }
 }
+
+data "terraform_remote_state" "shared" {
+  backend = "s3"
+  config = {
+    bucket = data.aws_ssm_parameter.state_bucket_name.value
+    key    = "terraform/Shared.tfstate"
+    region = "us-east-1"
+  }
+}
