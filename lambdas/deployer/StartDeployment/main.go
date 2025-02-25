@@ -34,10 +34,12 @@ func main() {
 func testLocally() {
 	res, _ := json.Marshal(
 		deployment_common.DeployerEvent{
-			Action: "APPLY",
-			UserId: "test1",
-			LabId:  "S3Website",
-			RunId:  "",
+			DeployData: deployment_common.DeployData{
+				Action: "APPLY",
+				UserId: "test1",
+				LabId:  "S3Website",
+				RunId:  "",
+			},
 			Params: map[string]string{
 				"hello": "",
 			},
@@ -47,7 +49,7 @@ func testLocally() {
 	t.Pr(s)
 }
 
-func handleRequest(ctx context.Context, event json.RawMessage) (*deployment_common.Output, error) {
+func handleRequest(ctx context.Context, event json.RawMessage) (*deployment_common.DeployData, error) {
 	t.Pr(event)
 	deployerEvent, err := ProcessEvent(event)
 	if err != nil {
@@ -83,8 +85,8 @@ func GetDynamoRequestData(deployerEvent *deployment_common.DeployerEvent) (*dyna
 	if deployerEvent.RunId == "" {
 		deployerEvent.RunId = utils.RandomUpperCaseString(3) + "-" + utils.RandomNumberString(3)
 	}
-	pk := "user_" + deployerEvent.UserId + "#lab_" + deployerEvent.LabId
-	sk := "run_" + deployerEvent.RunId + "#" + deployerEvent.Action
+	pk := deployment_common.GetAppTableHashKey(deployerEvent.UserId, deployerEvent.LabId)
+	sk := deployment_common.GetAppTableSortKey(deployerEvent.RunId, deployerEvent.Action)
 
 	deploymentRun := deployment_common.NewDeploymentRun(*deployerEvent, pk, sk)
 	table := dynamo.NewTable(appTable, "pk", "sk", dbClient)

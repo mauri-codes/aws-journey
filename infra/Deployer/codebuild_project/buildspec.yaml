@@ -7,16 +7,7 @@ phases:
       - terraform --version
   build:
     commands:
-      - pwd
-      - echo $ACTION
-      - echo $REPO
-      - echo $LAB_ID
-      - echo $USER_ID
-      - echo $RUN_ID
-      - echo $USER_STATE_BUCKET
-      - echo $USER_STATE_TABLE
-      - echo $APP_TABLE
-      - cd /apps/labs/$LAB_ID/iac
+      - cd /apps/labs/$LAB_ID/iac/
       - ls
       - rm -rf .terraform .terraform.lock.hcl backend.tf provider.tf
       # - cd /apps/labs/deploy_lab

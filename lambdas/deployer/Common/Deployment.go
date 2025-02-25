@@ -8,22 +8,60 @@ type DeploymentRun struct {
 }
 
 type DeployerEvent struct {
-	Action string
-	UserId string
-	LabId  string
-	RunId  string
+	DeployData
 	Params map[string]string
 }
 
-type Output struct {
+type CodebuildResultsOriginal struct {
+	BuildId     string
+	ProjectName string
+	Action      []string
+	UserId      []string
+	LabId       []string
+	RunId       []string
+	ErrorPhases []CodebuildPhase
+}
+
+type CodebuildPhase struct {
+	Context   []CodebuildContext
+	PhaseType string
+}
+
+type CodebuildContext struct {
+	Message    string
+	StatusCode string
+}
+
+type CodebuildResults struct {
+	BuildId     string
+	ProjectName string
+	ErrorPhases []CodebuildPhase
+	DeployData
+}
+
+func GetCodebuildResults(original CodebuildResultsOriginal) *CodebuildResults {
+	return &CodebuildResults{
+		BuildId:     original.BuildId,
+		ProjectName: original.ProjectName,
+		DeployData: DeployData{
+			Action: original.Action[0],
+			UserId: original.UserId[0],
+			LabId:  original.LabId[0],
+			RunId:  original.RunId[0],
+		},
+		ErrorPhases: original.ErrorPhases,
+	}
+}
+
+type DeployData struct {
 	Action string
 	UserId string
 	LabId  string
 	RunId  string
 }
 
-func NewOutput(event *DeployerEvent) *Output {
-	return &Output{
+func NewOutput(event *DeployerEvent) *DeployData {
+	return &DeployData{
 		Action: event.Action,
 		UserId: event.UserId,
 		LabId:  event.LabId,

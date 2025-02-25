@@ -8,68 +8,129 @@
          "Next": "Deploy",
          "Parameters": {
             "FunctionName": "${StartDeploymentFunctionArn}",
-            "Payload.$": "$"
+            "Payload": {
+               "Step": "StartDeployment",
+               "Action.$": "$.Action",
+               "LabId.$": "$.LabId",
+               "UserId.$": "$.UserId",
+               "RunId.$": "$.RunId"
+            }
          },
-         "Catch": [{
-            "ErrorEquals": ["States.ALL"],
-            "ResultPath": "$",
-            "Next": "ErrorHandler"
-         }]
+         "ResultSelector": {
+            "Step": "Deploy",
+            "Action.$": "$.Payload.Action",
+            "LabId.$": "$.Payload.LabId",
+            "UserId.$": "$.Payload.UserId",
+            "RunId.$": "$.Payload.RunId"
+         },
+         "Catch": [
+            {
+               "ErrorEquals": [
+                  "States.ALL"
+               ],
+               "ResultPath": "$",
+               "Next": "LambdaErrorHandler"
+            }
+         ]
       },
       "Deploy": {
-         "Type" : "Task",
-         "Resource": "arn:aws:states:::codebuild:startBuild",
+         "Type": "Task",
+         "Resource": "arn:aws:states:::codebuild:startBuild.sync",
          "Next": "CloseDeployment",
          "Parameters": {
             "ProjectName": "${DeployCodebuildProjectArn}",
-            "EnvironmentVariablesOverride": [{
-               "Name": "ACTION",
-               "Type": "PLAINTEXT",
-               "Value.$": "$.Payload.Action"
-            },{
-               "Name": "LAB_ID",
-               "Type": "PLAINTEXT",
-               "Value.$": "$.Payload.LabId"
-            },{
-               "Name": "USER_ID",
-               "Type": "PLAINTEXT",
-               "Value.$": "$.Payload.UserId"
-            },{
-               "Name": "RUN_ID",
-               "Type": "PLAINTEXT",
-               "Value.$": "$.Payload.RunId"
-            },{
-               "Name": "DEPLOY_PARAMS",
-               "Type": "PLAINTEXT",
-               "Value.$": "$.Payload.Params"
-            }]
+            "EnvironmentVariablesOverride": [
+               {
+                  "Name": "ACTION",
+                  "Type": "PLAINTEXT",
+                  "Value.$": "$.Action"
+               },
+               {
+                  "Name": "LAB_ID",
+                  "Type": "PLAINTEXT",
+                  "Value.$": "$.LabId"
+               },
+               {
+                  "Name": "USER_ID",
+                  "Type": "PLAINTEXT",
+                  "Value.$": "$.UserId"
+               },
+               {
+                  "Name": "RUN_ID",
+                  "Type": "PLAINTEXT",
+                  "Value.$": "$.RunId"
+               }
+            ]
          },
-         "Catch": [{
-            "ErrorEquals": ["States.ALL"],
-            "ResultPath": "$",
-            "Next": "ErrorHandler"
-         }]
+         "ResultSelector": {
+            "Step": "CloseDeployment",
+            "BuildId.$": "$.Build.Id",
+            "LogGroupName.$": "$.Build.Logs.GroupName",
+            "Action.$": "$.Build.Environment.EnvironmentVariables[?(@.Name == 'ACTION')].Value",
+            "RunId.$": "$.Build.Environment.EnvironmentVariables[?(@.Name == 'RUN_ID')].Value",
+            "LabId.$": "$.Build.Environment.EnvironmentVariables[?(@.Name == 'LAB_ID')].Value",
+            "UserId.$": "$.Build.Environment.EnvironmentVariables[?(@.Name == 'USER_ID')].Value"
+         },
+         "Catch": [
+            {
+               "ErrorEquals": [
+                  "States.ALL"
+               ],
+               "ResultPath": "$",
+               "Next": "ParseErrorCause"
+            }
+         ]
       },
       "CloseDeployment": {
-         "Type" : "Task",
+         "Type": "Task",
          "Resource": "arn:aws:states:::lambda:invoke",
          "Parameters": {
             "FunctionName": "${CloseDeploymentFunctionArn}",
             "Payload.$": "$"
          },
          "End": true,
-         "Catch": [{
-            "ErrorEquals": ["States.ALL"],
-            "ResultPath": "$",
-            "Next": "ErrorHandler"
-         }]
+         "Catch": [
+            {
+               "ErrorEquals": [
+                  "States.ALL"
+               ],
+               "ResultPath": null,
+               "Next": "LambdaErrorHandler"
+            }
+         ]
       },
-      "ErrorHandler": {
-         "Type" : "Task",
+      "LambdaErrorHandler": {
+         "Type": "Task",
          "Resource": "arn:aws:states:::lambda:invoke",
          "Parameters": {
-            "FunctionName": "${ErrorHandlerArn}",
+            "FunctionName": "${LambdaErrorHandlerArn}",
             "Payload.$": "$"
+         },
+         "End": true
+      },
+      "ParseErrorCause": {
+         "Type": "Pass",
+         "Parameters": {
+            "Result.$": "States.StringToJson($.Cause)"
+         },
+         "ResultPath": "$",
+         "Next": "CodebuildErrorHandler"
+      },
+      "CodebuildErrorHandler": {
+         "Type": "Task",
+         "Resource": "arn:aws:states:::lambda:invoke",
+         "Parameters": {
+            "FunctionName": "${CodebuildErrorHandlerArn}",
+            "Payload": {
+               "Step": "Deploy",
+               "BuildId.$": "$.Result.Build.Id",
+               "LogGroupName.$": "$.Result.Build.Logs.GroupName",
+               "Action.$": "$.Result.Build.Environment.EnvironmentVariables[?(@.Name == 'ACTION')].Value",
+               "RunId.$": "$.Result.Build.Environment.EnvironmentVariables[?(@.Name == 'RUN_ID')].Value",
+               "LabId.$": "$.Result.Build.Environment.EnvironmentVariables[?(@.Name == 'LAB_ID')].Value",
+               "UserId.$": "$.Result.Build.Environment.EnvironmentVariables[?(@.Name == 'USER_ID')].Value",
+               "Phases.$": "$.Result.Build.Phases[?(@.PhaseStatus == 'FAILED')]"
+            }
          },
          "End": true
       }

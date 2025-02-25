@@ -1,4 +1,4 @@
-resource "aws_codebuild_project" "example" {
+resource "aws_codebuild_project" "project" {
   name          = "LabDeployer"
   description   = "Deploys labs to external accounts"
   build_timeout = var.build_timeout
@@ -17,10 +17,6 @@ resource "aws_codebuild_project" "example" {
     environment_variable {
       name  = "ACTION"
       value = ""
-    }
-    environment_variable {
-      name  = "REPO"
-      value = var.repo
     }
     environment_variable {
       name  = "LAB_ID"

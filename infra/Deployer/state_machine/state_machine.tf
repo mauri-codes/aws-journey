@@ -5,7 +5,8 @@ resource "aws_sfn_state_machine" "deployer" {
     StartDeploymentFunctionArn = var.start_deployment_lambda_arn
     DeployCodebuildProjectArn  = var.codebuild_project_arn
     CloseDeploymentFunctionArn = var.close_deployment_lambda_arn
-    ErrorHandlerArn            = var.error_handler_lambda_arn
+    LambdaErrorHandlerArn      = var.error_handler_lambda_arn
+    CodebuildErrorHandlerArn   = var.error_handler_lambda_arn
     }
   )
 }
