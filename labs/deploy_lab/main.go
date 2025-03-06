@@ -3,6 +3,8 @@ package main
 import (
 	"context"
 	data_schemas "deploy_lab/dataSchemas"
+	custom_error "deploy_lab/errors"
+	error_codes "deploy_lab/errors/errorCodes"
 	"deploy_lab/process"
 	"log"
 
@@ -18,13 +20,14 @@ func main() {
 	}
 	dbClient := dynamodb.NewFromConfig(cfg)
 	input := process.CollectInputData(dbClient)
-	err = Deployment(input)
-	if err != nil {
+	depErr := Deployment(input)
+	if depErr != nil {
+		// UpdateDeploymentStatus(depErr, input)
 		log.Fatal(err.Error())
 	}
 }
 
-func Deployment(input *data_schemas.InputData) error {
+func Deployment(input *data_schemas.InputData) custom_error.ICustomError {
 	err := process.SetAccountData(input)
 	if err != nil {
 		return err
@@ -33,17 +36,9 @@ func Deployment(input *data_schemas.InputData) error {
 	if err != nil {
 		return err
 	}
-	err = dynamo.UpdateItem(input.UserStateTable, input.UpdateUserState)
-	if err != nil {
-		return err
+	updateError := dynamo.UpdateItem(input.UserStateTable, input.UpdateUserState)
+	if updateError != nil {
+		return custom_error.NewCustomError(error_codes.UPDATE_DEPLOYMENT_DATA_FAILED, updateError.Error())
 	}
 	return nil
 }
-
-// func CreateFailedStatus(client *dynamodb.Client, input *data_schemas.InputData, err error) {
-// 	updateStatusBuild := expression.Set(expression.Name("Status"), expression.Value(data_schemas.FAILED))
-// 	updateStatusBuild.Add(expression.Name("ErrorMessage"), expression.Value(err.Error()))
-// 	updateStatusExp, _ := expression.NewBuilder().WithUpdate(updateStatusBuild).Build()
-// 	input.UpdateDeployStatus.Expression = updateStatusExp
-// 	aws_dynamo.UpdateItem(client, input.UpdateDeployStatus)
-// }

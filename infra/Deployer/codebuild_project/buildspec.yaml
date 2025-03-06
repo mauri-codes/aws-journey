@@ -1,17 +1,10 @@
 version: 0.2
 
 phases:
-  install:
-    commands:
-      - terragrunt --version
-      - terraform --version
   build:
     commands:
       - cd /apps/labs/$LAB_ID/iac/
-      - ls
       - rm -rf .terraform .terraform.lock.hcl backend.tf provider.tf
-      # - cd /apps/labs/deploy_lab
-      # - ./deploy_lab_script
-      # - echo FINISHED
-      - cd ~
-      - pwd
+      - cd /apps/labs/deploy_lab
+      - ./deploy_lab_script
+      - echo FINISHED

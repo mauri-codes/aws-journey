@@ -33,3 +33,7 @@ variable "codebuild_role_name" {
 variable "ecr_repo_arn" {
   type = string
 }
+
+variable "codebuild_project_name" {
+  type = string
+}

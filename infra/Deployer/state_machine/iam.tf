@@ -46,7 +46,8 @@ resource "aws_iam_policy" "lambda_access" {
         Action = [
           "codebuild:StartBuild",
           "codebuild:StopBuild",
-          "codebuild:BatchGetBuilds"
+          "codebuild:BatchGetBuilds",
+          "codebuild:BatchGetReports"
         ]
         Effect = "Allow"
         Resource = [

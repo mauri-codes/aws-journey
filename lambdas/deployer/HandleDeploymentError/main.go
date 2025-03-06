@@ -7,16 +7,19 @@ import (
 	t "handle_deployment_err/utils"
 	"log"
 	"os"
+	"strings"
 
 	"github.com/aws/aws-lambda-go/lambda"
 	"github.com/aws/aws-sdk-go-v2/config"
 	"github.com/aws/aws-sdk-go-v2/feature/dynamodb/expression"
+	"github.com/aws/aws-sdk-go-v2/service/cloudwatchlogs"
 	"github.com/aws/aws-sdk-go-v2/service/dynamodb"
 	deployment_common "github.com/mauri-codes/aws-journey/lambdas/deployer/Common"
 	"github.com/mauri-codes/go-modules/aws/dynamo"
 )
 
 var dbClient *dynamodb.Client
+var cwClient *cloudwatchlogs.Client
 
 func init() {
 	cfg, err := config.LoadDefaultConfig(context.TODO())
@@ -25,6 +28,7 @@ func init() {
 	}
 
 	dbClient = dynamodb.NewFromConfig(cfg)
+	cwClient = cloudwatchlogs.NewFromConfig(cfg)
 }
 
 func main() {
@@ -69,8 +73,10 @@ func handleRequest(ctx context.Context, event json.RawMessage) error {
 		}
 		deployerEvent = deployment_common.GetCodebuildResults(deployerEventOriginal)
 	}
+
 	appTable := os.Getenv("APP_TABLE")
 
+	t.Pr("appTable")
 	t.Pr(appTable)
 	t.Pr(deployerEvent)
 	updateStatus := expression.Set(
@@ -85,11 +91,13 @@ func handleRequest(ctx context.Context, event json.RawMessage) error {
 		expression.Name("Step"),
 		expression.Value(step.Step),
 	)
-
 	if step.Step == data_types.DEPLOY_STEP {
+		if deployerEvent.ErrorPhases != nil {
+			UpdateLogs(cwClient, deployerEvent)
+		}
 		updateStatus.Set(
-			expression.Name("ErrorPhases"),
-			expression.Value(deployerEvent.ErrorPhases),
+			expression.Name("ErrorLogs"),
+			expression.Value(deployerEvent.ErrorLogs),
 		)
 	}
 
@@ -111,5 +119,46 @@ func handleRequest(ctx context.Context, event json.RawMessage) error {
 		log.Fatalf("Failed Create Deployment item, %v", err)
 	}
 
+	return nil
+}
+
+func UpdateLogs(cwClient *cloudwatchlogs.Client, results *deployment_common.CodebuildResults) error {
+	getLogEventsInput := cloudwatchlogs.GetLogEventsInput{
+		LogStreamName: &results.BuildId,
+		LogGroupName:  &results.LogGroupName,
+	}
+	logEvents, err := cwClient.GetLogEvents(context.TODO(), &getLogEventsInput)
+	if err != nil {
+		return err
+	}
+	latestContainer := 0
+	errorIndex := len(logEvents.Events)
+	failMessage := 0
+	for index, event := range logEvents.Events {
+		if strings.Contains(*event.Message, results.ErrorPhases[0].Contexts[0].Message) {
+			errorIndex = index
+			break
+		}
+		if strings.Contains(strings.ToUpper(*event.Message), "FAIL") || strings.Contains(strings.ToUpper(*event.Message), "ERROR") {
+			failMessage = index
+		}
+		if failMessage == 0 && strings.Contains(*event.Message, "[Container]") {
+			latestContainer = index
+		}
+	}
+	t.Pr("latestContainer")
+	t.Pr(latestContainer)
+	t.Pr("errorIndex")
+	t.Pr(errorIndex)
+	t.Pr("failMessage")
+	t.Pr(failMessage)
+	t.Pr(logEvents.Events)
+	errorLogs := make([]string, 0, errorIndex-latestContainer+1)
+	for i := latestContainer; i <= errorIndex; i++ {
+		if *logEvents.Events[i].Message != "" {
+			errorLogs = append(errorLogs, *logEvents.Events[i].Message)
+		}
+	}
+	results.ErrorLogs = errorLogs
 	return nil
 }

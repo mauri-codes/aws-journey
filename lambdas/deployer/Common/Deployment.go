@@ -1,5 +1,9 @@
 package deployment_common
 
+import (
+	"strings"
+)
+
 type DeploymentRun struct {
 	DeployerEvent
 	PK     string `dynamodbav:"pk"`
@@ -13,17 +17,17 @@ type DeployerEvent struct {
 }
 
 type CodebuildResultsOriginal struct {
-	BuildId     string
-	ProjectName string
-	Action      []string
-	UserId      []string
-	LabId       []string
-	RunId       []string
-	ErrorPhases []CodebuildPhase
+	BuildId      string
+	LogGroupName string
+	Action       []string
+	UserId       []string
+	LabId        []string
+	RunId        []string
+	ErrorPhases  []CodebuildPhase
 }
 
 type CodebuildPhase struct {
-	Context   []CodebuildContext
+	Contexts  []CodebuildContext
 	PhaseType string
 }
 
@@ -33,16 +37,21 @@ type CodebuildContext struct {
 }
 
 type CodebuildResults struct {
-	BuildId     string
-	ProjectName string
-	ErrorPhases []CodebuildPhase
+	BuildId      string
+	ProjectName  string
+	LogGroupName string
+	ErrorPhases  []CodebuildPhase
+	ErrorLogs    []string
 	DeployData
 }
 
 func GetCodebuildResults(original CodebuildResultsOriginal) *CodebuildResults {
+	projectName := strings.Split(original.BuildId, ":")[0]
+	buildId := strings.Split(original.BuildId, ":")[1]
 	return &CodebuildResults{
-		BuildId:     original.BuildId,
-		ProjectName: original.ProjectName,
+		BuildId:      buildId,
+		ProjectName:  projectName,
+		LogGroupName: original.LogGroupName,
 		DeployData: DeployData{
 			Action: original.Action[0],
 			UserId: original.UserId[0],

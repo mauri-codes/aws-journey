@@ -1,14 +1,15 @@
 module "codebuild_project" {
-  source              = "./codebuild_project"
-  build_timeout       = 5
-  repo                = var.repo
-  state_bucket        = local.state_bucket
-  state_table         = local.state_table
-  user_state_table    = local.user_state_table
-  app_table           = local.app_table
-  codebuild_image     = local.codebuild_repo
-  codebuild_role_name = local.codebuild_role
-  ecr_repo_arn        = local.ecr_repo_arn
+  source                 = "./codebuild_project"
+  build_timeout          = 5
+  repo                   = var.repo
+  state_bucket           = local.state_bucket
+  state_table            = local.state_table
+  user_state_table       = local.user_state_table
+  app_table              = local.app_table
+  codebuild_image        = local.codebuild_repo
+  codebuild_role_name    = local.codebuild_role
+  ecr_repo_arn           = local.ecr_repo_arn
+  codebuild_project_name = local.codebuild_project_name
 }
 
 module "lambdas" {
@@ -16,6 +17,9 @@ module "lambdas" {
   lambda_logs_policy_arn = local.lambda_logs_policy_arn
   infra_bucket           = local.state_bucket
   lambdas_description    = local.lambdas_description
+  depends_on = [
+    aws_iam_policy.lambda_get_logs
+   ]
 }
 
 module "step_function" {

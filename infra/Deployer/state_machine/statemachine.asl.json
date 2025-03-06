@@ -13,7 +13,8 @@
                "Action.$": "$.Action",
                "LabId.$": "$.LabId",
                "UserId.$": "$.UserId",
-               "RunId.$": "$.RunId"
+               "RunId.$": "$.RunId",
+               "Params.$": "$.Params"
             }
          },
          "ResultSelector": {
@@ -129,7 +130,7 @@
                "RunId.$": "$.Result.Build.Environment.EnvironmentVariables[?(@.Name == 'RUN_ID')].Value",
                "LabId.$": "$.Result.Build.Environment.EnvironmentVariables[?(@.Name == 'LAB_ID')].Value",
                "UserId.$": "$.Result.Build.Environment.EnvironmentVariables[?(@.Name == 'USER_ID')].Value",
-               "Phases.$": "$.Result.Build.Phases[?(@.PhaseStatus == 'FAILED')]"
+               "ErrorPhases.$": "$.Result.Build.Phases[?(@.PhaseStatus == 'FAILED')]"
             }
          },
          "End": true

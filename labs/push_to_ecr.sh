@@ -1,4 +1,8 @@
 
+cd deploy_lab
+./create_deploy_script.sh
+cd ..
+
 export REPO_DOMAIN=`aws ssm get-parameter --name "/Infra/Ecr/RepoDomain" | jq '.Parameter | .Value' | tr -d '"'`
 export REPO_URL=`aws ssm get-parameter --name "/Infra/Ecr/RepoUrl" | jq '.Parameter | .Value' | tr -d '"'`
 

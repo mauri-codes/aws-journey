@@ -59,6 +59,8 @@ func CollectInputData(client *dynamodb.Client) *data_schemas.InputData {
 		LabId:             LAB_ID,
 		UserId:            USER_ID,
 		RunId:             RUN_ID,
+		DeploymentSk:      deploymentSk,
+		DeploymentPk:      deploymentPk,
 		AppTable:          appTable,
 		UserStateTable:    userStateTable,
 		CurrentDate:       currentDate,

@@ -10,6 +10,8 @@ type InputData struct {
 	LabId             string
 	UserId            string
 	RunId             string
+	DeploymentSk      string
+	DeploymentPk      string
 	AppTable          *dynamo.Table
 	UserStateTable    *dynamo.Table
 	GetDeploymentData dynamo.IItemAction[*deployment_common.DeploymentRun]
