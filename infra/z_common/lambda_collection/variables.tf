@@ -7,6 +7,11 @@ variable "lambdas_description" {
   }))
 }
 
+variable "api_gateway_execution_arn" {
+  type = string
+  default = null
+}
+
 variable "infra_bucket" {
   type = string
 }

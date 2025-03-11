@@ -1,24 +1,20 @@
 locals {
-  region     = data.aws_region.current.name
-  account_id = data.aws_caller_identity.current.account_id
-  api_lambdas = {
-    RunDeployer = {
-      name    = "RunDeployer"
+  region                   = data.aws_region.current.name
+  account_id               = data.aws_caller_identity.current.account_id
+  run_deployer_lambda_name = "RunDeployer"
+  run_deployer_policy_name = "${local.run_deployer_lambda_name}Policy"
+  run_deployer_lambda_arn  = "arn:aws:iam::${local.account_id}:policy/${local.run_deployer_policy_name}"
+  lambdas_description = {
+    (local.run_deployer_lambda_name) = {
       handler = "bootstrap"
+      s3_key  = "lambda/api/${local.run_deployer_lambda_name}.zip"
+      environment_variables = {
+        STEP_FUNCTIONS = var.step_functions_arn
+      }
       policies = [
-        aws_iam_policy.dynamo_delete.arn,
-        aws_iam_policy.dynamo_put.arn,
-        aws_iam_policy.dynamo_get.arn
+        local.run_deployer_lambda_arn
       ]
-    }
-    HelloWorld = {
-      name    = "HelloWorld"
-      handler = "bootstrap"
-      policies = [
-        aws_iam_policy.dynamo_delete.arn,
-        aws_iam_policy.dynamo_get.arn,
-        aws_iam_policy.dynamo_put.arn
-      ]
+      invoke_from = "api_gateway"
     }
   }
 }

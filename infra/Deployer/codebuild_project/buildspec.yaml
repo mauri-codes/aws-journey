@@ -2,6 +2,7 @@ version: 0.2
 
 phases:
   build:
+    on-failure: ABORT
     commands:
       - cd /apps/labs/$LAB_ID/iac/
       - rm -rf .terraform .terraform.lock.hcl backend.tf provider.tf

@@ -22,8 +22,7 @@ resource "aws_lambda_permission" "apigw" {
   function_name = aws_lambda_function.lambda[each.key].function_name
   principal     = "apigateway.amazonaws.com"
 
-  source_arn = "${each.value.api_gateway_execution_arn}/*/*"
-  # source_arn = "${aws_api_gateway_rest_api.aws_journey_api.execution_arn}/*/*"
+  source_arn = "${var.api_gateway_execution_arn}/*/*"
 }
 
 resource "aws_lambda_function" "lambda" {

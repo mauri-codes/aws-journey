@@ -1,5 +1,5 @@
 resource "aws_api_gateway_rest_api" "aws_journey_api" {
-  name        = "AWSJourneyAPI"
+  name        = "JourneyAPI"
   description = "AWS Journey API"
   body        = data.template_file.api_spec.rendered
 
@@ -12,8 +12,7 @@ data "template_file" "api_spec" {
   template = file("${path.module}/api.yaml")
 
   vars = {
-    run_deployer_name = local.api_lambdas.RunDeployer.name
-    hello_world_name  = local.api_lambdas.HelloWorld.name
+    run_deployer_name = local.run_deployer_lambda_name
     account_id        = local.account_id
     aws_region        = local.region
   }
