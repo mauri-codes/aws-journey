@@ -48,3 +48,16 @@ provider "aws" {
 }
 EOF
 }
+
+generate "globals" {
+  path = "globals.tf"
+  if_exists = "overwrite_terragrunt"
+  contents = <<EOF
+locals {
+  account_A_id = "${split(":", get_env("ACCOUNT_A_ROLE"))[4]}"
+  account_B_id = "${split(":", get_env("ACCOUNT_B_ROLE"))[4]}"
+  region_A = "${get_env("REGION_A")}"
+  region_B = "${get_env("REGION_B")}"
+}
+EOF
+}

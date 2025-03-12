@@ -10,3 +10,4 @@ deploy_lab_script
 bootstrap
 .DS_Store
 *.zip
+globals.tf
