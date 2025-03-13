@@ -13,3 +13,7 @@ variable "account_id" {
 variable "region" {
   type = string
 }
+
+variable "table_name" {
+  type = string
+}

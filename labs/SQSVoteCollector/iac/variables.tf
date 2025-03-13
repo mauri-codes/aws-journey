@@ -1,9 +1,9 @@
 variable "progress" {
-  type = string
+  type    = string
   default = "BASE"
 }
 
 variable "project_name" {
-  type = string
+  type    = string
   default = "VoteCollector"
 }

@@ -23,4 +23,5 @@ require (
 	github.com/aws/aws-sdk-go-v2/service/sts v1.33.17 // indirect
 	github.com/aws/smithy-go v1.22.2 // indirect
 	github.com/mauri-codes/go-modules/aws/dynamo v0.0.0-20250221193406-8abf72f6f6a1 // indirect
+	github.com/mauri-codes/go-modules/utils v0.0.0-20250221193406-8abf72f6f6a1 // indirect
 )
