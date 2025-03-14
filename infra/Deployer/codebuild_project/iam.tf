@@ -98,12 +98,19 @@ data "aws_iam_policy_document" "codebuild_policy" {
     ]
   }
 
-
   statement {
     effect  = "Allow"
     actions = ["sts:AssumeRole"]
     resources = [
       "arn:aws:iam::*:role/*",
+    ]
+  }
+
+  statement {
+    effect  = "Allow"
+    actions = ["ssm:GetParameter"]
+    resources = [
+      "arn:aws:ssm:${local.region}:${local.account_id}:parameter/Infra/State/Bucket/Name"
     ]
   }
 }

@@ -9,9 +9,9 @@ resource "aws_codebuild_project" "project" {
   }
 
   environment {
-    compute_type                = "BUILD_GENERAL1_SMALL"
+    compute_type                = "BUILD_LAMBDA_1GB"
     image                       = var.codebuild_image
-    type                        = "LINUX_CONTAINER"
+    type                        = "ARM_LAMBDA_CONTAINER"
     image_pull_credentials_type = "SERVICE_ROLE"
 
     environment_variable {
