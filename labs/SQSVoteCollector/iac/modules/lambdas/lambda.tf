@@ -1,7 +1,8 @@
 
 resource "aws_lambda_function" "vote_collector" {
+  count            = var.step > 0 ? 1 : 0
   function_name    = local.vote_collector_lambda_name
-  role             = module.collector_role.role_arn
+  role             = module.collector_role[0].role_arn
   timeout          = 10
   handler          = "bootstrap"
   runtime          = "provided.al2023"

@@ -10,4 +10,3 @@ resource "aws_lambda_event_source_mapping" "queue_mapping" {
   batch_size                         = 100
   maximum_batching_window_in_seconds = 5
 }
-

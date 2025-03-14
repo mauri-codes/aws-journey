@@ -6,6 +6,7 @@ phases:
     commands:
       - cd /apps/labs/$LAB_ID/iac/
       - rm -rf .terraform .terraform.lock.hcl backend.tf provider.tf
+      - if [[ -f pre_deploy.sh ]]; then ./pre_deploy.sh; fi
       - cd /apps/labs/deploy_lab
       - ./deploy_lab_script
       - echo FINISHED

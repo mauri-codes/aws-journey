@@ -1,27 +1,27 @@
-module "generator_logs_policy" {
-  source      = "../../../../../infra/z_common/lambda_logs_policy"
-  lambda_name = local.vote_generator_lambda_name
-}
-
 module "collector_logs_policy" {
+  count       = var.step > 0 ? 1 : 0
   source      = "../../../../../infra/z_common/lambda_logs_policy"
   lambda_name = local.vote_collector_lambda_name
 }
 
 module "collector_role" {
+  count     = var.step > 0 ? 1 : 0
   source    = "../../../../../infra/z_common/assume_role"
   role_name = "${local.vote_collector_lambda_name}Role"
   service   = "lambda"
   managed_policy_arns = [
     "arn:aws:iam::${var.account_id}:policy/lambdaLogs_${local.vote_collector_lambda_name}",
-    "arn:aws:iam::${var.account_id}:policy/${local.lambda_sqs_policy_name}",
-    "arn:aws:iam::${var.account_id}:policy/${local.lambda_dynamo_policy_name}"
+    "arn:aws:iam::${var.account_id}:policy/${var.vote_collector_policy_name}",
   ]
   depends_on = [
     module.generator_logs_policy,
-    aws_iam_policy.dynamodb,
-    aws_iam_policy.lambda_sqs
+    aws_iam_policy.collector
   ]
+}
+
+module "generator_logs_policy" {
+  source      = "../../../../../infra/z_common/lambda_logs_policy"
+  lambda_name = local.vote_generator_lambda_name
 }
 
 module "generator_role" {
@@ -30,20 +30,29 @@ module "generator_role" {
   service   = "lambda"
   managed_policy_arns = [
     "arn:aws:iam::${var.account_id}:policy/lambdaLogs_${local.vote_generator_lambda_name}",
-    "arn:aws:iam::${var.account_id}:policy/${local.send_sqs_policy_name}"
+    "arn:aws:iam::${var.account_id}:policy/${local.generator_policy_name}"
   ]
   depends_on = [
-    module.generator_logs_policy
+    module.generator_logs_policy,
+    aws_iam_policy.generator
   ]
 }
 
-resource "aws_iam_policy" "lambda_sqs" {
-  name        = local.lambda_sqs_policy_name
-  description = "Access to SQS for lambda"
+resource "aws_iam_policy" "collector" {
+  count       = var.step > 0 ? 1 : 0
+  name        = var.vote_collector_policy_name
+  description = "Permissions for Collector Lambda"
 
   policy = jsonencode({
     Version = "2012-10-17"
     Statement = [
+      {
+        Action = [
+          "dynamodb:UpdateItem"
+        ]
+        Effect   = "Allow"
+        Resource = "arn:aws:dynamodb:${var.region}:${var.account_id}:table/${var.table_name}"
+      },
       {
         Action = [
           "sqs:DeleteMessage",
@@ -57,8 +66,8 @@ resource "aws_iam_policy" "lambda_sqs" {
   })
 }
 
-resource "aws_iam_policy" "send_sqs" {
-  name        = local.send_sqs_policy_name
+resource "aws_iam_policy" "generator" {
+  name        = local.generator_policy_name
   description = "Send Messages Access to SQS for lambda"
 
   policy = jsonencode({
@@ -71,24 +80,6 @@ resource "aws_iam_policy" "send_sqs" {
         ]
         Effect   = "Allow"
         Resource = "arn:aws:sqs:${var.region}:${var.account_id}:${var.voting_queue_name}"
-      },
-    ]
-  })
-}
-
-resource "aws_iam_policy" "dynamodb" {
-  name        = local.lambda_dynamo_policy_name
-  description = "Update Access to Voting Table for lambda"
-
-  policy = jsonencode({
-    Version = "2012-10-17"
-    Statement = [
-      {
-        Action = [
-          "dynamodb:UpdateItem"
-        ]
-        Effect   = "Allow"
-        Resource = "arn:aws:dynamodb:${var.region}:${var.account_id}:table/${var.table_name}"
       },
     ]
   })
