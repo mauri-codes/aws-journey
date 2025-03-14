@@ -24,7 +24,7 @@ resource "aws_lambda_function" "vote_generator" {
   source_code_hash = filebase64sha256("${path.module}/${local.vote_generator_lambda_name}.zip")
   environment {
     variables = {
-      VOTING_QUEUE = var.voting_queue_name
+      VOTING_QUEUE_URL = "https://sqs.${var.region}.amazonaws.com/${var.account_id}/${var.voting_queue_name}"
     }
   }
 }
