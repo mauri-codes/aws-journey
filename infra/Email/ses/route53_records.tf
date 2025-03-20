@@ -7,7 +7,7 @@ resource "aws_route53_record" "amazonses_verification_record" {
 }
 
 resource "aws_ses_domain_dkim" "ses_domain_dkim" {
-  domain   = join("", aws_ses_domain_identity.ses_domain.*.domain)
+  domain = join("", aws_ses_domain_identity.ses_domain.*.domain)
 }
 
 resource "aws_route53_record" "amazonses_dkim_record" {

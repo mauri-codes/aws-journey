@@ -6,9 +6,9 @@ variable "certificate_arn" {
 }
 variable "certificate_options" {
   type = set(object({
-    domain_name=string
-    resource_record_name=string
-    resource_record_value=string
-    resource_record_type=string
+    domain_name           = string
+    resource_record_name  = string
+    resource_record_value = string
+    resource_record_type  = string
   }))
 }

@@ -1,5 +1,5 @@
 resource "aws_ses_domain_identity" "ses_domain" {
-  domain   = var.domain
+  domain = var.domain
 }
 
 resource "aws_ses_domain_mail_from" "main" {
