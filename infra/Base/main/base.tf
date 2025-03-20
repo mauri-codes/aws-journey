@@ -23,3 +23,9 @@ resource "aws_ssm_parameter" "repo_name" {
   type  = "String"
   value = var.repo_name
 }
+
+resource "aws_ssm_parameter" "domain_name" {
+  name  = "/Domain/Name"
+  type  = "String"
+  value = var.domain_name
+}
