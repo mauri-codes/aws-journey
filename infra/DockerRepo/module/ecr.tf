@@ -1,4 +1,4 @@
 resource "aws_ecr_repository" "deployer" {
-  name                 = var.deployer_name
+  name                 = lower(var.repo_name)
   image_tag_mutability = "MUTABLE"
 }

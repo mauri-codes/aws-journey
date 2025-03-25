@@ -6,13 +6,13 @@ module "state_machine_role" {
     "arn:aws:iam::${var.account_id}:policy/${local.state_machine_policy_name}"
   ]
   conditions = {
-  #   "InStateMachine" = {
-  #     test     = "ArnLike"
-  #     variable = "aws:SourceArn"
-  #     values = [
-  #       "arn:aws:states:${var.region}:${var.account_id}:stateMachine:${var.state_machine_name}"
-  #     ]
-  #   }
+    #   "InStateMachine" = {
+    #     test     = "ArnLike"
+    #     variable = "aws:SourceArn"
+    #     values = [
+    #       "arn:aws:states:${var.region}:${var.account_id}:stateMachine:${var.state_machine_name}"
+    #     ]
+    #   }
     "FromAccount" = {
       test     = "StringEquals"
       variable = "aws:SourceAccount"
@@ -21,11 +21,11 @@ module "state_machine_role" {
       ]
     }
   }
-  depends_on = [ aws_iam_policy.lambda_access ]
+  depends_on = [aws_iam_policy.lambda_access]
 }
 
 resource "aws_iam_policy" "lambda_access" {
-  name        = "${local.state_machine_policy_name}"
+  name        = local.state_machine_policy_name
   description = "Access to state machine lambdas"
 
   policy = jsonencode({

@@ -7,7 +7,8 @@ module "codebuild_project" {
   user_state_table       = local.user_state_table
   app_table              = local.app_table
   codebuild_image        = local.codebuild_repo
-  codebuild_role_name    = local.codebuild_role
+  codebuild_role_name    = local.codebuild_role_name
+  codebuild_role_arn     = local.codebuild_role_arn
   ecr_repo_arn           = local.ecr_repo_arn
   codebuild_project_name = local.codebuild_project_name
 }
@@ -19,7 +20,7 @@ module "lambdas" {
   lambdas_description    = local.lambdas_description
   depends_on = [
     aws_iam_policy.lambda_get_logs
-   ]
+  ]
 }
 
 module "step_function" {
@@ -28,7 +29,6 @@ module "step_function" {
   region                      = local.region
   codebuild_project_arn       = module.codebuild_project.codebuild_project_arn
   state_machine_name          = local.state_machine_name
-  codebuild_project_name      = module.codebuild_project.codebuild_project_name
   start_deployment_lambda_arn = "arn:aws:lambda:${local.region}:${local.account_id}:function:${local.start_deployment_lambda_name}"
   close_deployment_lambda_arn = "arn:aws:lambda:${local.region}:${local.account_id}:function:${local.close_deployment_lambda_name}"
   error_handler_lambda_arn    = "arn:aws:lambda:${local.region}:${local.account_id}:function:${local.deployment_error_lambda_name}"

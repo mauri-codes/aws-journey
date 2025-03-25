@@ -2,7 +2,7 @@ resource "aws_codebuild_project" "project" {
   name          = var.codebuild_project_name
   description   = "Deploys labs to external accounts"
   build_timeout = var.build_timeout
-  service_role  = module.codebuild_role.role_arn
+  service_role  = var.codebuild_role_arn
 
   artifacts {
     type = "NO_ARTIFACTS"

@@ -30,6 +30,10 @@ variable "codebuild_role_name" {
   type = string
 }
 
+variable "codebuild_role_arn" {
+  type = string
+}
+
 variable "ecr_repo_arn" {
   type = string
 }

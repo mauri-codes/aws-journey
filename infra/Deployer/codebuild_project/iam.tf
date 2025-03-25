@@ -1,10 +1,3 @@
-
-module "codebuild_role" {
-  source    = "../../z_common/assume_role"
-  service   = "codebuild"
-  role_name = local.role_name
-}
-
 data "aws_iam_policy_document" "codebuild_policy" {
   statement {
     effect = "Allow"
@@ -116,6 +109,6 @@ data "aws_iam_policy_document" "codebuild_policy" {
 }
 
 resource "aws_iam_role_policy" "role_policy" {
-  role   = module.codebuild_role.role_name
+  role   = var.codebuild_role_name
   policy = data.aws_iam_policy_document.codebuild_policy.json
 }

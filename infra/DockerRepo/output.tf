@@ -1,15 +1,23 @@
-output "repo_domain" {
-  value = local.repo_domain
+output "deployer_repo_domain" {
+  value = module.deployer_repo.repo_domain
 }
 
-output "repo_url" {
-  value = module.repo.repo_url
+output "deployer_repo_url" {
+  value = module.deployer_repo.repo_url
 }
 
-output "codebuild_role_name" {
-  value = local.codebuild_role_name
+output "deployer_repo_arn" {
+  value = module.deployer_repo.repo_arn
 }
 
-output "repo_arn" {
-  value = module.repo.repo_arn
-}
+# output "webapp_repo_domain" {
+#   value = module.webapp_repo.repo_domain
+# }
+
+# output "webapp_repo_url" {
+#   value = module.webapp_repo.repo_url
+# }
+
+# output "webapp_repo_arn" {
+#   value = module.webapp_repo.repo_arn
+# }

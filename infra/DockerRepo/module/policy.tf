@@ -1,5 +1,3 @@
-data "aws_caller_identity" "current" {}
-
 data "aws_iam_policy_document" "pull" {
   statement {
     sid    = "AllowCodebuildPull"
@@ -7,7 +5,7 @@ data "aws_iam_policy_document" "pull" {
 
     principals {
       type        = "AWS"
-      identifiers = ["arn:aws:iam::${local.account_id}:role/${var.codebuild_role_name}"]
+      identifiers = var.ecr_assume_roles
     }
 
     actions = [

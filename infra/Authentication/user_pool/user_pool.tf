@@ -4,7 +4,7 @@ resource "aws_cognito_user_pool" "user_pool" {
   username_attributes      = ["email"]
   auto_verified_attributes = ["email"]
   password_policy {
-    minimum_length = 8
+    minimum_length = 6
   }
   verification_message_template {
     default_email_option = "CONFIRM_WITH_CODE"
@@ -70,6 +70,18 @@ resource "aws_cognito_user_pool" "user_pool" {
     developer_only_attribute = false
     mutable                  = true
     name                     = "workspaces"
+    required                 = false
+
+    string_attribute_constraints {
+      min_length = 1
+      max_length = 2048
+    }
+  }
+  schema {
+    attribute_data_type      = "String"
+    developer_only_attribute = false
+    mutable                  = true
+    name                     = "groups"
     required                 = false
 
     string_attribute_constraints {

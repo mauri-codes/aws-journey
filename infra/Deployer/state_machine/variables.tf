@@ -14,10 +14,6 @@ variable "codebuild_project_arn" {
   type = string
 }
 
-variable "codebuild_project_name" {
-  type = string
-}
-
 variable "region" {
   type = string
 }
