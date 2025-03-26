@@ -51,3 +51,8 @@ resource "aws_lb_listener_rule" "wildcard_subdomain" {
     target_group_arn = aws_lb_target_group.webapp.arn
   }
 }
+
+resource "aws_lb_listener_certificate" "subdomains" {
+  listener_arn    = aws_lb_listener.https.arn
+  certificate_arn = var.subdomain_cert_arn
+}

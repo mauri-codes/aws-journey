@@ -4,6 +4,7 @@ resource "aws_ecs_service" "webapp" {
   task_definition = aws_ecs_task_definition.webapp.arn
   desired_count   = 1
   launch_type     = "FARGATE"
+  availability_zone_rebalancing = "ENABLED"
 
   load_balancer {
     target_group_arn = aws_lb_target_group.webapp.arn
