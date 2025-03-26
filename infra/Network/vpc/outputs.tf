@@ -1,13 +1,13 @@
 output "vpc_id" {
-    value = aws_vpc.main_vpc.id
+  value = aws_vpc.main_vpc.id
 }
 
 output "vpc_arn" {
-    value = aws_vpc.main_vpc.arn
+  value = aws_vpc.main_vpc.arn
 }
 
 output "igw_arn" {
-    value = aws_internet_gateway.igw.arn
+  value = aws_internet_gateway.igw.arn
 }
 
 output "web_A_id" {

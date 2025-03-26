@@ -1,0 +1,22 @@
+module "ecs" {
+  source                  = "./ecs"
+  ecr_repo_arn            = local.ecr_repo_arn
+  ecs_execution_role_name = local.ecs_execution_role_name
+  alb_id                  = local.alb_id
+  cluster_id              = local.cluster_id
+  app_name                = local.app_name
+  ecs_task_role_name      = local.ecs_task_role_name
+  service_name            = "webapp"
+  table_arn               = local.table_arn
+  domain_cert_arn         = local.domain_cert_arn
+  subdomain_cert_arn      = local.subdomain_cert_arn
+  vpc_id                  = local.vpc_id
+  webapp_repo_url         = local.webapp_repo_url
+  zone_id                 = local.zone_id
+  domain_name             = local.domain_name
+  lb_dns_name             = local.lb_dns_name
+  subnets                 = local.sn_web
+  ecs_execution_role_arn  = local.ecs_execution_role_arn
+  lb_sg_id                = local.lb_sg_id
+  lb_zone_id              = local.lb_zone_id
+}

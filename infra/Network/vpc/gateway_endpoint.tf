@@ -1,8 +1,8 @@
 resource "aws_vpc_endpoint" "dynamodb" {
-  vpc_id       = aws_vpc.main_vpc.id
-  service_name = "com.amazonaws.${var.region}.dynamodb"
+  vpc_id          = aws_vpc.main_vpc.id
+  service_name    = "com.amazonaws.${var.region}.dynamodb"
   route_table_ids = [aws_route_table.private_rt.id]
-  policy = <<POLICY
+  policy          = <<POLICY
     {
     "Statement": [
         {

@@ -1,8 +1,8 @@
 output "vpc_id" {
-    value = module.network.vpc_id
+  value = module.network.vpc_id
 }
 output "vpc_arn" {
-    value = module.network.vpc_arn
+  value = module.network.vpc_arn
 }
 output "web_A" {
   value = module.network.web_A_id

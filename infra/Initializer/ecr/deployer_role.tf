@@ -3,5 +3,3 @@ module "deployer_role" {
   service   = "codebuild"
   role_name = var.deployer_role_name
 }
-
-

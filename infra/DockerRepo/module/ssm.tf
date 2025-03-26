@@ -10,3 +10,9 @@ resource "aws_ssm_parameter" "repo_domain" {
   type  = "String"
   value = local.repo_domain
 }
+
+resource "aws_ssm_parameter" "repo_name" {
+  name  = "/Infra/Ecr/${var.repo_name}/Name"
+  type  = "String"
+  value = local.repo_name
+}
