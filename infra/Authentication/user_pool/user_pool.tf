@@ -81,6 +81,18 @@ resource "aws_cognito_user_pool" "user_pool" {
     attribute_data_type      = "String"
     developer_only_attribute = false
     mutable                  = true
+    name                     = "accounts"
+    required                 = false
+
+    string_attribute_constraints {
+      min_length = 1
+      max_length = 2048
+    }
+  }
+  schema {
+    attribute_data_type      = "String"
+    developer_only_attribute = false
+    mutable                  = true
     name                     = "groups"
     required                 = false
 
@@ -117,9 +129,9 @@ resource "aws_cognito_user_pool_client" "client" {
   allowed_oauth_scopes          = ["email", "openid", "profile"]
   prevent_user_existence_errors = "ENABLED"
   supported_identity_providers  = ["COGNITO"]
-  id_token_validity             = 12
-  access_token_validity         = 12
-  refresh_token_validity        = 60
+  id_token_validity             = 24
+  access_token_validity         = 24
+  refresh_token_validity        = 24
   logout_urls                   = ["https://${var.domain}"]
   callback_urls                 = ["https://${var.domain}", "http://localhost:3000"]
   explicit_auth_flows = [

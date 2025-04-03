@@ -55,3 +55,6 @@ variable "subnets" {
 variable "lb_zone_id" {
   type = string
 }
+variable "region" {
+  type = string
+}

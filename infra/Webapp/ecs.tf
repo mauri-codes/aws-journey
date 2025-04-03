@@ -19,4 +19,5 @@ module "ecs" {
   ecs_execution_role_arn  = local.ecs_execution_role_arn
   lb_sg_id                = local.lb_sg_id
   lb_zone_id              = local.lb_zone_id
+  region                  = local.region
 }
