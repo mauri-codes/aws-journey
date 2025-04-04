@@ -11,3 +11,4 @@ bootstrap
 .DS_Store
 *.zip
 globals.tf
+*.converted.json
