@@ -1,6 +1,7 @@
 ACCOUNT_ID=$1
 USER_NAME=$2
-EMAIL=$3
+ENV_NAME=$3
+LOCAL_ACCOUNT_ID=`aws sts get-caller-identity --query 'Account' --output text`
 
 ID=`shuf -er -n3  {A..Z} | tr -d '\n'`
 TESTER=TESTER_$ID
