@@ -5,4 +5,7 @@ module "api" {
   step_functions_arn     = local.step_functions_arn
   env                    = "PROD"
   infra_bucket           = local.infra_bucket
+  app_table              = local.dyamo_table
+  user_pool_arn          = local.user_pool_arn
+  table_arn              = local.table_arn
 }

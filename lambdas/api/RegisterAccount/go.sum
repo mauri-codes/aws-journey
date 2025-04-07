@@ -46,6 +46,10 @@ github.com/mauri-codes/go-modules/aws/dynamo v0.0.0-20250404034153-35d69e139535 
 github.com/mauri-codes/go-modules/aws/dynamo v0.0.0-20250404034153-35d69e139535/go.mod h1:ktlbsWB0G79NBlIdg52SJ/mLTxVFd9otZQzoy7CNrXw=
 github.com/mauri-codes/go-modules/utils v0.0.0-20250406073500-40d4b9cb67de h1:pKoAEKpVu260OokzqVKLna4sPDq8kfUneIaQdKx/TY0=
 github.com/mauri-codes/go-modules/utils v0.0.0-20250406073500-40d4b9cb67de/go.mod h1:8n5iqOtxFOWZIDCkvayhcyUZPtB7SQBzF2hkn7izdPA=
+github.com/mauri-codes/go-modules/utils v0.0.0-20250407063306-356ea78703d1 h1:MnPRoYKMF0Vg4tVbUdsOZqOKIOvESQXX4pZ+5xNzsWw=
+github.com/mauri-codes/go-modules/utils v0.0.0-20250407063306-356ea78703d1/go.mod h1:8n5iqOtxFOWZIDCkvayhcyUZPtB7SQBzF2hkn7izdPA=
+github.com/mauri-codes/go-modules/utils v0.0.0-20250407063948-6e5d35f64727 h1:wzTgMZloRaqelmkkQmkLlnT0RnAIwasYxvuoC3eftmI=
+github.com/mauri-codes/go-modules/utils v0.0.0-20250407063948-6e5d35f64727/go.mod h1:8n5iqOtxFOWZIDCkvayhcyUZPtB7SQBzF2hkn7izdPA=
 github.com/pmezard/go-difflib v1.0.0 h1:4DBwDE0NGyQoBHbLQYPwSUPoCMWR5BEzIk/f1lZbAQM=
 github.com/pmezard/go-difflib v1.0.0/go.mod h1:iKH77koFhYxTK1pcRnkKkqfTogsbg7gZNVY4sRDYZ/4=
 github.com/stretchr/testify v1.7.2 h1:4jaiDzPyXQvSd7D0EjG45355tLlV3VOECpq10pLC+8s=

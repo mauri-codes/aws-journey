@@ -9,7 +9,7 @@ require (
 	github.com/aws/aws-sdk-go-v2/service/dynamodb v1.40.2
 	github.com/golang-jwt/jwt/v5 v5.2.2
 	github.com/mauri-codes/go-modules/aws/dynamo v0.0.0-20250404034153-35d69e139535
-	github.com/mauri-codes/go-modules/utils v0.0.0-20250406073500-40d4b9cb67de
+	github.com/mauri-codes/go-modules/utils v0.0.0-20250407063948-6e5d35f64727
 )
 
 require (

@@ -12,9 +12,11 @@ data "template_file" "api_spec" {
   template = file("${path.module}/api.yaml")
 
   vars = {
-    run_deployer_name = local.run_deployer_lambda_name
-    account_id        = local.account_id
-    aws_region        = local.region
+    run_deployer_name            = local.run_deployer_lambda_name
+    register_account_lambda_name = local.register_account_lambda_name
+    user_pool_arn                = var.user_pool_arn
+    account_id                   = local.account_id
+    aws_region                   = local.region
   }
 }
 

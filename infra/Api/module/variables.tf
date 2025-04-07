@@ -13,3 +13,15 @@ variable "step_functions_arn" {
 variable "lambda_logs_policy_arn" {
   type = string
 }
+
+variable "app_table" {
+  type = string
+}
+
+variable "user_pool_arn" {
+  type = string
+}
+
+variable "table_arn" {
+  type = string 
+}

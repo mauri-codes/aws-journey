@@ -23,3 +23,21 @@ data "terraform_remote_state" "deployer" {
     region = "us-east-1"
   }
 }
+
+data "terraform_remote_state" "authentication" {
+  backend = "s3"
+  config = {
+    bucket = data.aws_ssm_parameter.state_bucket_name.value
+    key    = "terraform/Authentication.tfstate"
+    region = "us-east-1"
+  }
+}
+
+data "terraform_remote_state" "db" {
+  backend = "s3"
+  config = {
+    bucket = data.aws_ssm_parameter.state_bucket_name.value
+    key    = "terraform/AppDB.tfstate"
+    region = "us-east-1"
+  }
+}

@@ -3,9 +3,11 @@ package main
 import (
 	"context"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"log"
 	"os"
+	"strings"
 
 	"github.com/aws/aws-lambda-go/events"
 	"github.com/aws/aws-lambda-go/lambda"
@@ -32,7 +34,6 @@ type UserAccountItem struct {
 
 type RegisterAccountEvent struct {
 	AccessToken string
-	IdToken     string
 	AccoutData
 }
 
@@ -52,7 +53,6 @@ type RegisterAccountResponse struct {
 
 type CustomClaims struct {
 	Username string `json:"name"`
-	Envs     string `json:"custom:env"`
 	jwt.RegisteredClaims
 }
 
@@ -76,80 +76,124 @@ func main() {
 
 func handleRequest(ctx context.Context, request events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
 	var event RegisterAccountEvent
+	idToken := strings.Split(request.Headers["Authorization"], " ")[1]
 	if err := json.Unmarshal([]byte(request.Body), &event); err != nil {
 		return utils.Error500(utils.ResponseInput{
 			Message: fmt.Sprintf("Failed to unmarshal event: %v", err),
-		}), err
+		})
 	}
-	utils.Pr("---event---")
-	utils.Pr(event)
 
 	claims := &CustomClaims{}
-	_, _, err := new(jwt.Parser).ParseUnverified(event.IdToken, claims)
+	_, _, err := new(jwt.Parser).ParseUnverified(idToken, claims)
 	if err != nil {
 		return utils.Error500(utils.ResponseInput{
 			Message: fmt.Sprintf("Failed to process token: %v", err),
-		}), err
+		})
 	}
 
-	fmt.Println(claims.Username)
 	PK := "user_" + claims.Username + "#environments"
 	table := dynamo.NewTable(appTable, "pk", "sk", dbClient)
 
-	if data, err := GetDBEnvironments(table, PK); err != nil {
+	if err := CheckPreviouslyCreatedEnvs(table, PK, event.EnvironmentName); err != nil {
 		return utils.Error400(utils.ResponseInput{
-			Message: fmt.Sprintf("Failed to verify current user's environments: %v", err),
-		}), err
-	} else {
-		utils.Pr(data)
-		if len(data) >= 3 {
-			return utils.Error400(utils.ResponseInput{
-				Message: "No more than 3 environments allowed",
-			}), err
-		}
+			Message: fmt.Sprintf("Previously Created Envs Check Failed: %v", err),
+		})
 	}
 
 	if err = UpdateDynamoTable(event, table, PK); err != nil {
 		return utils.Error500(utils.ResponseInput{
 			Message: fmt.Sprintf("Failed to save user Environment in DB: %v", err),
-		}), err
+		})
 	}
 
-	if err = UpdateCognitoAttribute(claims.Envs, event.EnvironmentName, event.AccessToken); err != nil {
+	if err = UpdateCognitoAttribute(event.EnvironmentName, event.AccessToken); err != nil {
 		return utils.Error500(utils.ResponseInput{
 			Message: fmt.Sprintf("Failed to save user Environment in Identity: %v", err),
-		}), err
+		})
 	}
 
 	return utils.SuccessResponse(utils.ResponseInput{
 		Message: "Environment saved successfully",
-	}), nil
+	})
 }
 
-func GetDBEnvironments(table *dynamo.Table, PK string) ([]UserAccountItem, error) {
+func CheckPreviouslyCreatedEnvs(table *dynamo.Table, PK string, envName string) error {
 	queryAction := dynamo.NewQuery[UserAccountItem](PK, "", "")
-	return dynamo.Query(table, queryAction)
+	envs, queryErr := dynamo.Query(table, queryAction)
+	if queryErr != nil {
+		return queryErr
+	}
+	if len(envs) >= 3 {
+		return errors.New("no more than 3 environments allowed")
+	}
+	for _, item := range envs {
+		if item.EnvironmentName == envName {
+			return fmt.Errorf("environment %s already in use", item.EnvironmentName)
+		}
+	}
+	return nil
 }
 
 func UpdateDynamoTable(event RegisterAccountEvent, table *dynamo.Table, PK string) error {
 	SK := fmt.Sprintf("ws-%s", event.EnvironmentName)
 	utils.Pr(SK)
-	putEnvAction := dynamo.NewPutItem(PK, SK, event.AccoutData)
+	putEnvAction := dynamo.NewPutItem(PK, SK, UserAccountItem{
+		PK:         PK,
+		SK:         SK,
+		AccoutData: event.AccoutData,
+	})
 	return dynamo.PutItem(table, putEnvAction)
 }
 
-func UpdateCognitoAttribute(envs string, envName string, accessToken string) error {
-	workspacesKey := "custom:workspaces"
-	workspacesValue := fmt.Sprintf("%s,%s", envs, envName)
-	cognitoInput := &cognitoidentityprovider.UpdateUserAttributesInput{
+func UpdateCognitoAttribute(envName string, accessToken string) error {
+	getUserInput := &cognitoidentityprovider.GetUserInput{
+		AccessToken: &accessToken,
+	}
+	userData, userInputErr := cognitoClient.GetUser(context.TODO(), getUserInput)
+
+	if userInputErr != nil {
+		return userInputErr
+	}
+
+	envsKeyName := "custom:env"
+	emptyEnv := "NONE"
+	var envsValue string
+	userEnvs := ""
+	for _, Attributes := range userData.UserAttributes {
+		if *Attributes.Name == envsKeyName {
+			if *Attributes.Value != emptyEnv {
+				userEnvs = *Attributes.Value
+			}
+		}
+	}
+	if userEnvs == "" {
+		envsValue = envName
+		keyName := "custom:defaultEnv"
+		updateDefaultAttributeInput := &cognitoidentityprovider.UpdateUserAttributesInput{
+			AccessToken: &accessToken,
+			UserAttributes: []types.AttributeType{
+				{
+					Name:  &keyName,
+					Value: &envsValue,
+				},
+			},
+		}
+		_, err := cognitoClient.UpdateUserAttributes(context.TODO(), updateDefaultAttributeInput)
+		if err != nil {
+			return err
+		}
+	} else {
+		envsValue = fmt.Sprintf("%s,%s", userEnvs, envName)
+	}
+	upDateAttributeInput := &cognitoidentityprovider.UpdateUserAttributesInput{
 		AccessToken: &accessToken,
 		UserAttributes: []types.AttributeType{
 			{
-				Name:  &workspacesKey,
-				Value: &workspacesValue,
+				Name:  &envsKeyName,
+				Value: &envsValue,
 			},
 		},
 	}
-	_, err := cognitoClient.UpdateUserAttributes(context.TODO(), cognitoInput)
+	_, err := cognitoClient.UpdateUserAttributes(context.TODO(), upDateAttributeInput)
 	return err
 }

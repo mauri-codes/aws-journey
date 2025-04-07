@@ -4,6 +4,9 @@ locals {
   run_deployer_lambda_name = "RunDeployer"
   run_deployer_policy_name = "${local.run_deployer_lambda_name}Policy"
   run_deployer_lambda_arn  = "arn:aws:iam::${local.account_id}:policy/${local.run_deployer_policy_name}"
+  register_account_lambda_name = "RegisterAccount"
+  register_account_policy_name = "${local.register_account_lambda_name}Policy"
+  register_account_lambda_arn  = "arn:aws:iam::${local.account_id}:policy/${local.register_account_policy_name}"
   lambdas_description = {
     (local.run_deployer_lambda_name) = {
       handler = "bootstrap"
@@ -13,6 +16,17 @@ locals {
       }
       policies = [
         local.run_deployer_lambda_arn
+      ]
+      invoke_from = "api_gateway"
+    }
+    (local.register_account_lambda_name) = {
+      handler = "bootstrap"
+      s3_key  = "lambda/api/${local.register_account_lambda_name}.zip"
+      environment_variables = {
+        APP_TABLE = var.app_table
+      }
+      policies = [
+        local.register_account_lambda_arn
       ]
       invoke_from = "api_gateway"
     }

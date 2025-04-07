@@ -21,6 +21,25 @@ paths:
         type: "aws_proxy"
         contentHandling: "CONVERT_TO_TEXT"
 
+  /account:
+    put:
+      summary: Registers a new account
+      requestBody:
+        content:
+          "application/json": 
+            schema:
+              $ref: '#/components/schemas/EnvironmentRegistrationData'
+        required: true
+      security:
+        - CognitoAuthorizer: []
+      x-amazon-apigateway-integration:
+        uri: "arn:aws:apigateway:${aws_region}:lambda:path/2015-03-31/functions/arn:aws:lambda:${aws_region}:${account_id}:function:${register_account_lambda_name}/invocations"
+        passthroughBehavior: "when_no_match"
+        httpMethod: "POST"
+        type: "aws_proxy"
+        contentHandling: "CONVERT_TO_TEXT"
+
+
 components:
   schemas:
     DeploymentData:
@@ -37,8 +56,37 @@ components:
           type: string
     Empty:
       type: "object"
+    EnvironmentRegistrationData:
+      type: object
+      required: [AccessToken, AccountId, EnvironmentName, DeployerRole, TesterRole, Region, Region2]
+      properties:
+        AccessToken:
+          type: string
+        AccountId:
+          type: string
+        EnvironmentName:
+          type: string
+        DeployerRole:
+          type: string
+        TesterRole:
+          type: string
+        Region:
+          type: string
+        Region2:
+          type: string
+    Empty:
+      type: "object"
   securitySchemes:
     internal_access:
       type: apiKey
       name: x-api-key
       in: header
+    CognitoAuthorizer:
+      type: apiKey
+      name: Authorization
+      in: header
+      x-amazon-apigateway-authtype: cognito_user_pools
+      x-amazon-apigateway-authorizer:
+        type: cognito_user_pools
+        providerARNs:
+          - "${user_pool_arn}"
