@@ -1,12 +1,14 @@
 locals {
-  region                   = data.aws_region.current.name
-  account_id               = data.aws_caller_identity.current.account_id
-  run_deployer_lambda_name = "RunDeployer"
-  run_deployer_policy_name = "${local.run_deployer_lambda_name}Policy"
-  run_deployer_lambda_arn  = "arn:aws:iam::${local.account_id}:policy/${local.run_deployer_policy_name}"
+  region                       = data.aws_region.current.name
+  account_id                   = data.aws_caller_identity.current.account_id
+  run_deployer_lambda_name     = "RunDeployer"
+  run_deployer_policy_name     = "${local.run_deployer_lambda_name}Policy"
+  run_deployer_lambda_arn      = "arn:aws:iam::${local.account_id}:policy/${local.run_deployer_policy_name}"
   register_account_lambda_name = "RegisterAccount"
   register_account_policy_name = "${local.register_account_lambda_name}Policy"
   register_account_lambda_arn  = "arn:aws:iam::${local.account_id}:policy/${local.register_account_policy_name}"
+  api_gateway_domain           = "api-v2.${var.domain_name}"
+  route_53_domain              = "api.${var.domain_name}"
   lambdas_description = {
     (local.run_deployer_lambda_name) = {
       handler = "bootstrap"
@@ -31,4 +33,6 @@ locals {
       invoke_from = "api_gateway"
     }
   }
+  stage_name     = aws_api_gateway_stage.journey_portal_stage.stage_name
+  api_gateway_id = aws_api_gateway_rest_api.aws_journey_api.id
 }

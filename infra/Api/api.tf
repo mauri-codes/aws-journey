@@ -8,4 +8,7 @@ module "api" {
   app_table              = local.dyamo_table
   user_pool_arn          = local.user_pool_arn
   table_arn              = local.table_arn
+  domain_name            = local.domain_name
+  acm_certificate        = local.subdomain_cert_arn
+  zone_id                = local.zone_id
 }

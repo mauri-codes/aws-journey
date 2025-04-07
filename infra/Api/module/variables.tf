@@ -25,3 +25,15 @@ variable "user_pool_arn" {
 variable "table_arn" {
   type = string 
 }
+
+variable "domain_name" {
+  type = string
+}
+
+variable "acm_certificate" {
+  type = string
+}
+
+variable "zone_id" {
+  type = string
+}
