@@ -1,4 +1,4 @@
-# ./run.sh 12351 $ACCOUT_NAME $REGION1 $REGION2 $ACCESS_TOKEN $ID_TOKEN
+# ./run.sh $JN_ACCOUNT $ACCOUT_NAME $REGION1 $REGION2 $ACCESS_TOKEN $ID_TOKEN
 JN_ACCOUNT_ID=$1
 ENV_NAME=$2
 REGION1=$3
@@ -8,8 +8,8 @@ ID_TOKEN=$6
 LOCAL_ACCOUNT_ID=`aws sts get-caller-identity --query 'Account' --output text`
 
 ID=`shuf -er -n3  {A..Z} | tr -d '\n'`
-TESTER=TESTER_$ID
-DEPLOYER=DEPLOYER_$ID
+TESTER=AWS_JOURNEY_TESTER_$ID
+DEPLOYER=AWS_JOURNEY_DEPLOYER_$ID
 DEPLOYER_POLICY=DeployerIamPolicy_$ID
 
 sed  "s/ACCOUNT_ID/$JN_ACCOUNT_ID/g" AssumeRole.json > AssumeRole.converted.json
@@ -39,7 +39,7 @@ DEPLOYER_ROLE=$(\
 aws iam attach-role-policy --policy-arn arn:aws:iam::aws:policy/ReadOnlyAccess --role-name $TESTER --no-cli-pager
 aws iam attach-role-policy --policy-arn arn:aws:iam::aws:policy/ReadOnlyAccess --role-name $DEPLOYER --no-cli-pager
 aws iam attach-role-policy --policy-arn arn:aws:iam::aws:policy/PowerUserAccess --role-name $DEPLOYER --no-cli-pager
-aws iam attach-role-policy --policy-arn arn:aws:iam::$JN_ACCOUNT_ID:policy/$DEPLOYER_POLICY --role-name $DEPLOYER --no-cli-pager
+aws iam attach-role-policy --policy-arn arn:aws:iam::$LOCAL_ACCOUNT_ID:policy/$DEPLOYER_POLICY --role-name $DEPLOYER --no-cli-pager
 
 PAYLOAD="{\
     \"AccountId\": \"$LOCAL_ACCOUNT_ID\", \

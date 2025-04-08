@@ -135,11 +135,9 @@ func CheckPreviouslyCreatedEnvs(table *dynamo.Table, PK string, envName string) 
 }
 
 func UpdateDynamoTable(event RegisterAccountEvent, table *dynamo.Table, PK string) error {
-	SK := fmt.Sprintf("ws-%s", event.EnvironmentName)
-	utils.Pr(SK)
-	putEnvAction := dynamo.NewPutItem(PK, SK, UserAccountItem{
+	putEnvAction := dynamo.NewPutItem(PK, event.EnvironmentName, UserAccountItem{
 		PK:         PK,
-		SK:         SK,
+		SK:         event.EnvironmentName,
 		AccoutData: event.AccoutData,
 	})
 	return dynamo.PutItem(table, putEnvAction)
