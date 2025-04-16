@@ -12,6 +12,8 @@
                "Step": "StartDeployment",
                "Action.$": "$.Action",
                "LabId.$": "$.LabId",
+               "LabPath.$": "$.LabPath",
+               "StageId.$": "$.StageId",
                "UserId.$": "$.UserId",
                "RunId.$": "$.RunId",
                "Params.$": "$.Params"
@@ -21,6 +23,8 @@
             "Step": "Deploy",
             "Action.$": "$.Payload.Action",
             "LabId.$": "$.Payload.LabId",
+            "LabPath.$": "$.Payload.LabPath",
+            "StageId.$": "$.Payload.StageId",
             "UserId.$": "$.Payload.UserId",
             "RunId.$": "$.Payload.RunId"
          },
@@ -52,6 +56,16 @@
                   "Value.$": "$.LabId"
                },
                {
+                  "Name": "LAB_PATH",
+                  "Type": "PLAINTEXT",
+                  "Value.$": "$.LabPath"
+               },
+               {
+                  "Name": "STAGE_ID",
+                  "Type": "PLAINTEXT",
+                  "Value.$": "$.StageId"
+               },
+               {
                   "Name": "USER_ID",
                   "Type": "PLAINTEXT",
                   "Value.$": "$.UserId"
@@ -70,6 +84,8 @@
             "Action.$": "$.Build.Environment.EnvironmentVariables[?(@.Name == 'ACTION')].Value",
             "RunId.$": "$.Build.Environment.EnvironmentVariables[?(@.Name == 'RUN_ID')].Value",
             "LabId.$": "$.Build.Environment.EnvironmentVariables[?(@.Name == 'LAB_ID')].Value",
+            "StageId.$": "$.Build.Environment.EnvironmentVariables[?(@.Name == 'STAGE_ID')].Value",
+            "LabPath.$": "$.Build.Environment.EnvironmentVariables[?(@.Name == 'LAB_PATH')].Value",
             "UserId.$": "$.Build.Environment.EnvironmentVariables[?(@.Name == 'USER_ID')].Value"
          },
          "Catch": [
@@ -129,6 +145,8 @@
                "Action.$": "$.Result.Build.Environment.EnvironmentVariables[?(@.Name == 'ACTION')].Value",
                "RunId.$": "$.Result.Build.Environment.EnvironmentVariables[?(@.Name == 'RUN_ID')].Value",
                "LabId.$": "$.Result.Build.Environment.EnvironmentVariables[?(@.Name == 'LAB_ID')].Value",
+               "LabPath.$": "$.Result.Build.Environment.EnvironmentVariables[?(@.Name == 'LAB_PATH')].Value",
+               "StageId.$": "$.Result.Build.Environment.EnvironmentVariables[?(@.Name == 'STAGE_ID')].Value",
                "UserId.$": "$.Result.Build.Environment.EnvironmentVariables[?(@.Name == 'USER_ID')].Value",
                "ErrorPhases.$": "$.Result.Build.Phases[?(@.PhaseStatus == 'FAILED')]"
             }

@@ -54,3 +54,5 @@ github.com/aws/smithy-go v1.22.2 h1:6D9hW43xKFrRx/tXXfAlIZc4JI+yQe6snnWcQyxSyLQ=
 github.com/aws/smithy-go v1.22.2/go.mod h1:irrKGvNn1InZwb2d7fkIRNucdfwR8R+Ts3wxYa/cJHg=
 github.com/mauri-codes/go-modules/aws/dynamo v0.0.0-20250221193406-8abf72f6f6a1 h1:GG1od69sbXJKdAilQzxP9z47tv0Ad0gNnq4Fsr3Pd0Q=
 github.com/mauri-codes/go-modules/aws/dynamo v0.0.0-20250221193406-8abf72f6f6a1/go.mod h1:ktlbsWB0G79NBlIdg52SJ/mLTxVFd9otZQzoy7CNrXw=
+github.com/mauri-codes/go-modules/aws/dynamo v0.0.0-20250407063948-6e5d35f64727 h1:DwCL1Ww3S3Tz7dY1Kkl2ZC2MSfzUIJOiHsOGhl6pogY=
+github.com/mauri-codes/go-modules/aws/dynamo v0.0.0-20250407063948-6e5d35f64727/go.mod h1:ktlbsWB0G79NBlIdg52SJ/mLTxVFd9otZQzoy7CNrXw=

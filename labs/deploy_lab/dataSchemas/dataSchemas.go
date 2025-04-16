@@ -8,6 +8,8 @@ import (
 type InputData struct {
 	Action            string
 	LabId             string
+	StageId           string
+	LabPath           string
 	UserId            string
 	RunId             string
 	DeploymentSk      string

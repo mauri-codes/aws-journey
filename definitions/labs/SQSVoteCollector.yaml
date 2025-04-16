@@ -1,0 +1,123 @@
+
+Id: SQSVoteCollector
+Title: SQS Vote Collector
+SubTitle: Voting App
+Overview:
+  - >
+    In this lab you'll build a SQS queue that receives votes and send them to 
+    a Lambda function for couting and storing in DynamoDB
+OverviewS:
+  - >
+    In this
+Deployment:
+  - Name: Base
+    Code: BASE
+  - Name: Collector
+    Code: WITH_COLLECTOR
+  - Name: Complete
+    Code: COMPLETE
+Parameters:
+  Default:
+    vote_collector_lambda_name: VoteCollector
+    table_name: VotingApp
+    vote_collector_policy_name: VoteCollectorPolicy
+
+Stages:
+  - Id: VoteCounter
+    Description:
+      - Title: Description
+        Content:
+          - Type: Text
+            Content: >
+              You're working for a big sports club in your city. They noticed that allowing people 
+              to vote on the outcome of sport matches makes their events much more popular, thus 
+              increasing their revenue.
+          - Type: Text
+            Content: >
+              The sports club has a mobile app in which they'll implement the client side of this voting
+              application. They want you to deal with the backend and the infrastructure necessary in AWS.
+          - Type: Text
+            Content: >
+              The users will send you this event.
+          - Type: Code
+            Content: >
+              {
+                "Topic": "BestTeamCurrentSeason",
+                "Favorite": "RaptorsTeam"
+              }
+          - Type: Text
+            Content: >
+              Which represents a user that casted their vote to the app. You can assume every event in this format
+              is unique and valid. After a short period of time of receiving these events, the sports club will 
+              announce the results. These results should be available via query in DynamoDB which will have this data
+          - Type: Code
+            Content: >
+              {
+                "Topic": "BestTeamCurrentSeason",
+                "RaptorsTeam": 4,
+                "NomadsTeam": 10,
+                "SilverWolfsTeam": 2
+              }
+          - Type: Text
+            Content: >
+              Take into account the following:
+          - Type: List
+            List:
+              - There could be multiple Topics being voted on at any given time
+              - Every user event you receive is unique and valid.
+      - Title: Infrastructure
+        Content:
+          - Type: Text
+            Content: >
+              The infrastructure is composed of:
+          - Type: List
+            Content: Numbered
+            List:
+              - A SQS queue that will receive messages with the user preferred option.
+              - A lambda function that will process the messages that get to the queue.
+              - A dynamoDB table that will hold the data from the Topics the users will vote on.
+          - Type: Image
+            Content: /Labs/SQSVoteCollector/Infrastructure1.png
+          - Type: Text
+            Content: >
+              The dynamoDB format for the data is important. You need to save the records with primary key pk, 
+              sort key sk. Look at the following example.
+          - Type: Code
+            Content: >
+              {
+                "pk": "Favorites#BestTeamCurrentSeason",
+                "sk": "RaptorsTeam",
+                "count": 4
+              }
+          - Type: Text
+            Content: >
+              This makes it so querying is easier.
+          - Type: Text
+            Content: >
+              The sports club also wants you do the following configurations
+          - Type: List
+            List:
+              - The lambda function should have timeout of 10s
+      - Title: Support Infrastructure
+        Content:
+          - Type: Text
+            Content: >
+              You can optionally deploy the supporting infrastructure, which consists of a lambda function
+              called VoteGenerator. This function can be triggered to simulate multiple users sending messages
+              to the queue.
+          - Type: Text
+            Content: >
+              In order to deploy it, go to Deployments tab and deploy the "Base" infrastructure
+          - Type: Image
+            Content: /Labs/SQSVoteCollector/Infrastructure2.png
+
+
+  # - Title: Record Processing Failures
+  #   Id: DLQ
+  #   Description:
+  #     - Type: Title
+  #       Content: SQS Vote Collector
+  #     - Type: Text
+  #       Content: the description
+  #     - Type: Text
+  #       Content: the description

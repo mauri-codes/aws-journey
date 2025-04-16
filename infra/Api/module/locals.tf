@@ -7,7 +7,7 @@ locals {
   register_account_lambda_name = "RegisterAccount"
   register_account_policy_name = "${local.register_account_lambda_name}Policy"
   register_account_lambda_arn  = "arn:aws:iam::${local.account_id}:policy/${local.register_account_policy_name}"
-  api_gateway_domain           = "api-v2.${var.domain_name}"
+  api_gateway_domain           = "api-jn.${var.domain_name}"
   route_53_domain              = "api.${var.domain_name}"
   lambdas_description = {
     (local.run_deployer_lambda_name) = {

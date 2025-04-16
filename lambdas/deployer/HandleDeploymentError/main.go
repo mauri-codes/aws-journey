@@ -107,7 +107,7 @@ func handleRequest(ctx context.Context, event json.RawMessage) error {
 		return err
 	}
 
-	pk := deployment_common.GetAppTableHashKey(deployerEvent.UserId, deployerEvent.LabId)
+	pk := deployment_common.GetAppTableHashKey(deployerEvent.UserId, deployerEvent.LabId, deployerEvent.StageId)
 	sk := deployment_common.GetAppTableSortKey(deployerEvent.RunId, deployerEvent.Action)
 
 	table := dynamo.NewTable(appTable, "pk", "sk", dbClient)
@@ -146,13 +146,6 @@ func UpdateLogs(cwClient *cloudwatchlogs.Client, results *deployment_common.Code
 			latestContainer = index
 		}
 	}
-	t.Pr("latestContainer")
-	t.Pr(latestContainer)
-	t.Pr("errorIndex")
-	t.Pr(errorIndex)
-	t.Pr("failMessage")
-	t.Pr(failMessage)
-	t.Pr(logEvents.Events)
 	errorLogs := make([]string, 0, errorIndex-latestContainer+1)
 	for i := latestContainer; i <= errorIndex; i++ {
 		if *logEvents.Events[i].Message != "" {

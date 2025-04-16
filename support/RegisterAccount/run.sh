@@ -22,7 +22,6 @@ TESTER_ROLE=$(\
         --output text \
 )
 
-
 aws iam create-policy \
     --policy-name $DEPLOYER_POLICY \
     --policy-document file://DeployerIAMPolicy.json \

@@ -23,11 +23,19 @@ resource "aws_codebuild_project" "project" {
       value = ""
     }
     environment_variable {
+      name  = "LAB_PATH"
+      value = ""
+    }
+    environment_variable {
       name  = "USER_ID"
       value = ""
     }
     environment_variable {
       name  = "RUN_ID"
+      value = ""
+    }
+    environment_variable {
+      name  = "STAGE_ID"
       value = ""
     }
     environment_variable {

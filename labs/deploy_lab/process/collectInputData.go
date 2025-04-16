@@ -24,6 +24,8 @@ func CollectInputData(client *dynamodb.Client) *data_schemas.InputData {
 	USER_ID := os.Getenv("USER_ID")
 	LAB_ID := os.Getenv("LAB_ID")
 	RUN_ID := os.Getenv("RUN_ID")
+	STAGE_ID := os.Getenv("STAGE_ID")
+	LAB_PATH := os.Getenv("LAB_PATH")
 	USER_STATE_BUCKET := os.Getenv("USER_STATE_BUCKET")
 	USER_STATE_TABLE := os.Getenv("USER_STATE_TABLE")
 	CODEBUILD_BUILD_ID := os.Getenv("CODEBUILD_BUILD_ID")
@@ -32,6 +34,7 @@ func CollectInputData(client *dynamodb.Client) *data_schemas.InputData {
 	}
 	userKey := "user_" + USER_ID
 	labKey := "lab_" + LAB_ID
+	stageKey := "stg_" + STAGE_ID
 	runKey := "run_" + RUN_ID
 	timeNow := time.Now()
 	currentDate := fmt.Sprintf(
@@ -44,7 +47,7 @@ func CollectInputData(client *dynamodb.Client) *data_schemas.InputData {
 	)
 	appTable := dynamo.NewTable(APP_TABLE, "pk", "sk", client)
 	userStateTable := dynamo.NewTable(USER_STATE_TABLE, "LockID", "", client)
-	deploymentPk := userKey + "#" + labKey
+	deploymentPk := userKey + "#" + labKey + "#" + stageKey + "#" + "deployments"
 	deploymentSk := runKey + "#" + ACTION
 	accountsPk := userKey
 	accountsSk := "accounts"
@@ -59,6 +62,8 @@ func CollectInputData(client *dynamodb.Client) *data_schemas.InputData {
 		LabId:             LAB_ID,
 		UserId:            USER_ID,
 		RunId:             RUN_ID,
+		StageId:           STAGE_ID,
+		LabPath:           LAB_PATH,
 		DeploymentSk:      deploymentSk,
 		DeploymentPk:      deploymentPk,
 		AppTable:          appTable,

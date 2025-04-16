@@ -70,7 +70,7 @@ func handleRequest(ctx context.Context, event json.RawMessage) error {
 	)
 	updateStatusExp, _ := expression.NewBuilder().WithUpdate(updateStatus).Build()
 
-	pk := deployment_common.GetAppTableHashKey(deployerEvent.UserId, deployerEvent.LabId)
+	pk := deployment_common.GetAppTableHashKey(deployerEvent.UserId, deployerEvent.LabId, deployerEvent.StageId)
 	sk := deployment_common.GetAppTableSortKey(deployerEvent.RunId, deployerEvent.Action)
 
 	table := dynamo.NewTable(appTable, "pk", "sk", dbClient)

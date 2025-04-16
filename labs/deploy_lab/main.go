@@ -32,7 +32,7 @@ func Deployment(input *data_schemas.InputData) custom_error.ICustomError {
 	if err != nil {
 		return err
 	}
-	err = process.TerraformCommand(input.Action, input.LabId)
+	err = process.TerraformCommand(input.Action, input.LabPath)
 	if err != nil {
 		return err
 	}

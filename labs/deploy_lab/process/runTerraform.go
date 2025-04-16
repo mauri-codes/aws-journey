@@ -33,13 +33,13 @@ func RunCommand(dir string, mainCommand string, command ...string) custom_error.
 	return nil
 }
 
-func TerraformCommand(action string, labId string) custom_error.ICustomError {
+func TerraformCommand(action string, labPath string) custom_error.ICustomError {
 	if action == APPLY_ACTION {
 		action = "apply"
 	} else {
 		action = "destroy"
 	}
-	dir := "../" + labId + "/iac"
+	dir := "../" + labPath + "/iac"
 	err := RunCommand(dir, "terragrunt", "init")
 	if err != nil {
 		return err

@@ -85,7 +85,7 @@ func GetDynamoRequestData(deployerEvent *deployment_common.DeployerEvent) (*dyna
 	if deployerEvent.RunId == "" {
 		deployerEvent.RunId = utils.RandomUpperCaseString(3) + "-" + utils.RandomNumberString(3)
 	}
-	pk := deployment_common.GetAppTableHashKey(deployerEvent.UserId, deployerEvent.LabId)
+	pk := deployment_common.GetAppTableHashKey(deployerEvent.UserId, deployerEvent.LabId, deployerEvent.StageId)
 	sk := deployment_common.GetAppTableSortKey(deployerEvent.RunId, deployerEvent.Action)
 
 	deploymentRun := deployment_common.NewDeploymentRun(*deployerEvent, pk, sk)
