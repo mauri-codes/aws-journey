@@ -11,6 +11,7 @@ ID=`shuf -er -n3  {A..Z} | tr -d '\n'`
 TESTER=AWS_JOURNEY_TESTER_$ID
 DEPLOYER=AWS_JOURNEY_DEPLOYER_$ID
 DEPLOYER_POLICY=AWS_JOURNEY_DEPLOYER_POLICY_$ID
+TESTER_POLICY=AWS_JOURNEY_TESTER_POLICY_$ID
 
 sed  "s/ACCOUNT_ID/$JN_ACCOUNT_ID/g" AssumeRole.json > AssumeRole.converted.json
 
@@ -22,11 +23,6 @@ TESTER_ROLE=$(\
         --output text \
 )
 
-aws iam create-policy \
-    --policy-name $DEPLOYER_POLICY \
-    --policy-document file://DeployerIAMPolicy.json \
-    --no-cli-pager
-
 DEPLOYER_ROLE=$(\
     aws iam create-role \
         --role-name $DEPLOYER \
@@ -35,10 +31,21 @@ DEPLOYER_ROLE=$(\
         --output text \
 )
 
+aws iam create-policy \
+    --policy-name $DEPLOYER_POLICY \
+    --policy-document file://DeployerIAMPolicy.json \
+    --no-cli-pager
+
+aws iam create-policy \
+    --policy-name $TESTER_POLICY \
+    --policy-document file://TesterIAMPolicy.json \
+    --no-cli-pager
+
 aws iam attach-role-policy --policy-arn arn:aws:iam::aws:policy/ReadOnlyAccess --role-name $TESTER --no-cli-pager
 aws iam attach-role-policy --policy-arn arn:aws:iam::aws:policy/ReadOnlyAccess --role-name $DEPLOYER --no-cli-pager
 aws iam attach-role-policy --policy-arn arn:aws:iam::aws:policy/PowerUserAccess --role-name $DEPLOYER --no-cli-pager
 aws iam attach-role-policy --policy-arn arn:aws:iam::$LOCAL_ACCOUNT_ID:policy/$DEPLOYER_POLICY --role-name $DEPLOYER --no-cli-pager
+aws iam attach-role-policy --policy-arn arn:aws:iam::$LOCAL_ACCOUNT_ID:policy/$TESTER_POLICY --role-name $TESTER --no-cli-pager
 
 PAYLOAD="{\
     \"AccountId\": \"$LOCAL_ACCOUNT_ID\", \
