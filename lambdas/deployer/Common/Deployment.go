@@ -6,9 +6,9 @@ import (
 
 type DeploymentRun struct {
 	DeployerEvent
-	PK     string `dynamodbav:"pk"`
-	SK     string `dynamodbav:"sk"`
-	Status string
+	PK           string `dynamodbav:"pk"`
+	SK           string `dynamodbav:"sk"`
+	DeployStatus string
 }
 
 type DeployerEvent struct {
@@ -24,6 +24,7 @@ type CodebuildResultsOriginal struct {
 	StageId      []string
 	LabId        []string
 	LabPath      []string
+	EnvName      []string
 	RunId        []string
 	ErrorPhases  []CodebuildPhase
 }
@@ -59,6 +60,7 @@ func GetCodebuildResults(original CodebuildResultsOriginal) *CodebuildResults {
 			UserId:  original.UserId[0],
 			LabId:   original.LabId[0],
 			LabPath: original.LabPath[0],
+			EnvName: original.EnvName[0],
 			RunId:   original.RunId[0],
 			StageId: original.StageId[0],
 		},
@@ -72,6 +74,7 @@ type DeployData struct {
 	LabId   string
 	StageId string
 	LabPath string
+	EnvName string
 	RunId   string
 }
 
@@ -80,6 +83,7 @@ func NewOutput(event *DeployerEvent) *DeployData {
 		Action:  event.Action,
 		UserId:  event.UserId,
 		LabId:   event.LabId,
+		EnvName: event.EnvName,
 		LabPath: event.LabPath,
 		RunId:   event.RunId,
 		StageId: event.StageId,
@@ -91,7 +95,7 @@ func NewDeploymentRun(deploymentEvent DeployerEvent, pk string, sk string) *Depl
 		DeployerEvent: deploymentEvent,
 		PK:            pk,
 		SK:            sk,
-		Status:        RUNNING,
+		DeployStatus:  RUNNING,
 	}
 }
 

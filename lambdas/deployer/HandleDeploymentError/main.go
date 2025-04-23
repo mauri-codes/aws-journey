@@ -80,7 +80,7 @@ func handleRequest(ctx context.Context, event json.RawMessage) error {
 	t.Pr(appTable)
 	t.Pr(deployerEvent)
 	updateStatus := expression.Set(
-		expression.Name("Status"),
+		expression.Name("DeployStatus"),
 		expression.Value(deployment_common.FAILED),
 	)
 	updateStatus.Set(

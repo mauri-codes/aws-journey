@@ -10,6 +10,7 @@ type InputData struct {
 	LabId             string
 	StageId           string
 	LabPath           string
+	EnvName           string
 	UserId            string
 	RunId             string
 	DeploymentSk      string

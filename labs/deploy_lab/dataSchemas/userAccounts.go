@@ -1,8 +1,8 @@
 package data_schemas
 
 type UserAccounts struct {
-	Account_A string
-	Account_B string
-	Region_A  string
-	Region_B  string
+	AccountId    string
+	DeployerRole string
+	Region       string
+	Region2      string
 }

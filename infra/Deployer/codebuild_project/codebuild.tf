@@ -23,6 +23,10 @@ resource "aws_codebuild_project" "project" {
       value = ""
     }
     environment_variable {
+      name  = "ENV_NAME"
+      value = ""
+    }
+    environment_variable {
       name  = "LAB_PATH"
       value = ""
     }

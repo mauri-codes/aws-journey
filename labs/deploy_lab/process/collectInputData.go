@@ -26,6 +26,7 @@ func CollectInputData(client *dynamodb.Client) *data_schemas.InputData {
 	RUN_ID := os.Getenv("RUN_ID")
 	STAGE_ID := os.Getenv("STAGE_ID")
 	LAB_PATH := os.Getenv("LAB_PATH")
+	ENV_NAME := os.Getenv("ENV_NAME")
 	USER_STATE_BUCKET := os.Getenv("USER_STATE_BUCKET")
 	USER_STATE_TABLE := os.Getenv("USER_STATE_TABLE")
 	CODEBUILD_BUILD_ID := os.Getenv("CODEBUILD_BUILD_ID")
@@ -49,8 +50,8 @@ func CollectInputData(client *dynamodb.Client) *data_schemas.InputData {
 	userStateTable := dynamo.NewTable(USER_STATE_TABLE, "LockID", "", client)
 	deploymentPk := userKey + "#" + labKey + "#" + stageKey + "#" + "deployments"
 	deploymentSk := runKey + "#" + ACTION
-	accountsPk := userKey
-	accountsSk := "accounts"
+	accountsPk := userKey + "#environments"
+	accountsSk := ENV_NAME
 	UserStateHashKeyValue := USER_STATE_BUCKET + "/users_state/" + USER_ID + "/" + LAB_ID + "/" + RUN_ID + ".tfstate-md5"
 	expiration := time.Now().Unix() + 10*60*60*24
 	userStateStatusBuild := expression.Set(expression.Name("Expires"), expression.Value(expiration))
@@ -64,6 +65,7 @@ func CollectInputData(client *dynamodb.Client) *data_schemas.InputData {
 		RunId:             RUN_ID,
 		StageId:           STAGE_ID,
 		LabPath:           LAB_PATH,
+		EnvName:           ENV_NAME,
 		DeploymentSk:      deploymentSk,
 		DeploymentPk:      deploymentPk,
 		AppTable:          appTable,

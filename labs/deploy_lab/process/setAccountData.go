@@ -29,22 +29,19 @@ func SetAccountData(input *data_schemas.InputData) custom_error.ICustomError {
 	if err != nil {
 		return custom_error.NewCustomError(error_codes.GET_DEPLOYMENT_DATA_FAILED, err.Error())
 	}
-	if userAccounts.Account_B == "" {
-		userAccounts.Account_B = userAccounts.Account_A
-	}
-	err = os.Setenv("ACCOUNT_A_ROLE", userAccounts.Account_A)
+	err = os.Setenv("ACCOUNT_A_ROLE", userAccounts.DeployerRole)
 	if err != nil {
 		return custom_error.NewCustomError(error_codes.GET_ENV_VARIABLE_FAILED, "ACCOUNT_A_ROLE: "+err.Error())
 	}
-	err = os.Setenv("ACCOUNT_B_ROLE", userAccounts.Account_B)
+	err = os.Setenv("ACCOUNT_B_ROLE", userAccounts.DeployerRole)
 	if err != nil {
 		return custom_error.NewCustomError(error_codes.GET_ENV_VARIABLE_FAILED, "ACCOUNT_B_ROLE: "+err.Error())
 	}
-	err = os.Setenv("REGION_A", userAccounts.Region_A)
+	err = os.Setenv("REGION_A", userAccounts.Region)
 	if err != nil {
 		return custom_error.NewCustomError(error_codes.GET_ENV_VARIABLE_FAILED, "REGION_A: "+err.Error())
 	}
-	err = os.Setenv("REGION_B", userAccounts.Region_B)
+	err = os.Setenv("REGION_B", userAccounts.Region2)
 	if err != nil {
 		return custom_error.NewCustomError(error_codes.GET_ENV_VARIABLE_FAILED, "REGION_B: "+err.Error())
 	}

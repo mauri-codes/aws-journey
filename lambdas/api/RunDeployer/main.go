@@ -35,6 +35,7 @@ type RunDeployerEvent struct {
 	Action      string
 	UserId      string
 	LabId       string
+	EnvName     string
 	LabPath     string
 	StageId     string
 	RunId       string

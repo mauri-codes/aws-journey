@@ -10,7 +10,7 @@ LOCAL_ACCOUNT_ID=`aws sts get-caller-identity --query 'Account' --output text`
 ID=`shuf -er -n3  {A..Z} | tr -d '\n'`
 TESTER=AWS_JOURNEY_TESTER_$ID
 DEPLOYER=AWS_JOURNEY_DEPLOYER_$ID
-DEPLOYER_POLICY=DeployerIamPolicy_$ID
+DEPLOYER_POLICY=AWS_JOURNEY_DEPLOYER_POLICY_$ID
 
 sed  "s/ACCOUNT_ID/$JN_ACCOUNT_ID/g" AssumeRole.json > AssumeRole.converted.json
 
