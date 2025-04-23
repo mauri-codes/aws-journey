@@ -50,4 +50,4 @@ PAYLOAD="{\
     \"AccessToken\": \"$ACCESS_TOKEN\"\
 }"
 
-curl --request PUT -H "Content-Type:application/json"  -H "Authorization:Bearer $ID_TOKEN" https://api-v2.aws-journey.net/account --data "$PAYLOAD"
+curl --request PUT -H "Content-Type:application/json"  -H "Authorization:Bearer $ID_TOKEN" https://api-jn.aws-journey.net/account --data "$PAYLOAD"
