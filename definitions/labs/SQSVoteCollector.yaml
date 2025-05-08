@@ -14,13 +14,17 @@ Deployments:
     Code: BASE
   - Name: Collector
     Code: WITH_COLLECTOR
-  - Name: Complete
-    Code: COMPLETE
+    Parameters:
+      - table_name
+      - vote_collector_lambda_name
+      - vote_collector_policy_name
+Solution: true
 Parameters:
   Default:
     vote_collector_lambda_name: VoteCollector
     table_name: VotingApp
     vote_collector_policy_name: VoteCollectorPolicy
+    voting_queue_name: VotingQueue
 
 Stages:
   - Id: VoteCounter

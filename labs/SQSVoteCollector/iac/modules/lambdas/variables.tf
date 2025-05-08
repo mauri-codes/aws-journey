@@ -21,3 +21,7 @@ variable "vote_collector_policy_name" {
 variable "step" {
   type = number
 }
+
+variable "suffix" {
+  type = string
+}

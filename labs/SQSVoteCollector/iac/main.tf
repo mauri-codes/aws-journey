@@ -6,6 +6,7 @@ module "lambdas" {
   table_name                 = local.table_name
   vote_collector_policy_name = var.vote_collector_policy_name
   step                       = local.step
+  suffix                     = var.suffix
   providers = {
     aws = aws.account1_A
   }

@@ -19,3 +19,8 @@ variable "vote_collector_lambda_name" {
 variable "vote_collector_policy_name" {
   type = string
 }
+
+variable "suffix" {
+  type = string
+  default = ""
+}

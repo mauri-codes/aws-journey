@@ -43,7 +43,6 @@ aws iam create-policy \
 
 aws iam attach-role-policy --policy-arn arn:aws:iam::aws:policy/ReadOnlyAccess --role-name $TESTER --no-cli-pager
 aws iam attach-role-policy --policy-arn arn:aws:iam::aws:policy/ReadOnlyAccess --role-name $DEPLOYER --no-cli-pager
-aws iam attach-role-policy --policy-arn arn:aws:iam::aws:policy/PowerUserAccess --role-name $DEPLOYER --no-cli-pager
 aws iam attach-role-policy --policy-arn arn:aws:iam::$LOCAL_ACCOUNT_ID:policy/$DEPLOYER_POLICY --role-name $DEPLOYER --no-cli-pager
 aws iam attach-role-policy --policy-arn arn:aws:iam::$LOCAL_ACCOUNT_ID:policy/$TESTER_POLICY --role-name $TESTER --no-cli-pager
 

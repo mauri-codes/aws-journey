@@ -3,7 +3,7 @@
     "Statement": [
         {
             "Effect": "Allow",
-            "NotAction": [
+            "Action": [
                 "iam:Add*",
                 "iam:Attach*",
                 "iam:Create*",
@@ -11,9 +11,14 @@
                 "iam:Detach*",
                 "iam:Put*",
                 "iam:Remove*",
-                "iam:Tag",
-                "iam:Untag",
-                "iam:Update"
+                "iam:Tag*",
+                "iam:Untag*",
+                "iam:Update*",
+                "iam:PassRole",
+                "dynamodb:*",
+                "lambda:*",
+                "sqs:*",
+                "s3:*"
             ],
             "Resource": "*"
         }
