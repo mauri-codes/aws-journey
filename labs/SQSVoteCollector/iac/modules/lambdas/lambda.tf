@@ -6,8 +6,8 @@ resource "aws_lambda_function" "vote_collector" {
   timeout          = 10
   handler          = "bootstrap"
   runtime          = "provided.al2023"
-  filename         = "/tmp/${local.vote_collector_lambda_name}.zip"
-  source_code_hash = filebase64sha256("/tmp/${local.vote_collector_lambda_name}.zip")
+  filename         = "/tmp/${local.vote_collector_lambda_path}.zip"
+  source_code_hash = filebase64sha256("/tmp/${local.vote_collector_lambda_path}.zip")
   environment {
     variables = {
       APP_TABLE = var.table_name
@@ -21,8 +21,8 @@ resource "aws_lambda_function" "vote_generator" {
   timeout          = 10
   handler          = "bootstrap"
   runtime          = "provided.al2023"
-  filename         = "/tmp/${local.vote_generator_lambda_name}.zip"
-  source_code_hash = filebase64sha256("/tmp/${local.vote_generator_lambda_name}.zip")
+  filename         = "/tmp/${local.vote_generator_lambda_path}.zip"
+  source_code_hash = filebase64sha256("/tmp/${local.vote_generator_lambda_path}.zip")
   environment {
     variables = {
       VOTING_QUEUE_URL = "https://sqs.${var.region}.amazonaws.com/${var.account_id}/${var.voting_queue_name}"
