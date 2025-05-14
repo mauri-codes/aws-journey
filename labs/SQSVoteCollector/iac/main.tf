@@ -7,6 +7,8 @@ module "lambdas" {
   vote_collector_policy_name = var.vote_collector_policy_name
   step                       = local.step
   suffix                     = var.suffix
+  vote_collector_lambda      = var.vote_collector_lambda_name
+  vote_collector_role_name   = var.vote_collector_role_name
   providers = {
     aws = aws.account1_A
   }

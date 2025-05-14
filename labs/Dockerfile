@@ -20,7 +20,7 @@ RUN chmod u+x terragrunt
 RUN mv terragrunt /usr/local/bin/terragrunt
 
 WORKDIR /
-
+ARG CACHE_BUST=6
 RUN git clone https://github.com/mauri-codes/aws-journey.git ./aws-journey --no-checkout
 RUN cd ./aws-journey && git sparse-checkout init && git sparse-checkout set labs infra && git checkout main
 

@@ -7,7 +7,7 @@ module "collector_logs_policy" {
 module "collector_role" {
   count     = var.step > 0 ? 1 : 0
   source    = "../../../../../infra/z_common/assume_role"
-  role_name = "${local.vote_collector_lambda_name}Role"
+  role_name = var.vote_collector_role_name
   service   = "lambda"
   managed_policy_arns = [
     "arn:aws:iam::${var.account_id}:policy/lambdaLogs_${local.vote_collector_lambda_name}",

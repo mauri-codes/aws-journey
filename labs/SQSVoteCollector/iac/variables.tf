@@ -20,6 +20,10 @@ variable "vote_collector_policy_name" {
   type = string
 }
 
+variable "vote_collector_role_name" {
+  type = string
+}
+
 variable "suffix" {
   type = string
   default = ""
