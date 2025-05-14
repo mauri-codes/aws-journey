@@ -1,0 +1,48 @@
+{
+    "QueryLanguage": "JSONata",
+    "StartAt": "UpdateDeploymentState",
+    "States": {
+        "UpdateDeploymentState": {
+            "Type": "Task",
+            "Resource": "arn:aws:states:::aws-sdk:dynamodb:updateItem",
+            "Arguments": {
+              "TableName": "${TableName}",
+              "Key": {
+                  "pk": { "S": "tester" },
+                  "sk": { "S": "activity" }
+              },
+              "UpdateExpression": "SET ServiceStop = :newStop",
+              "ExpressionAttributeValues": {
+                  ":newStop": {
+                      "N": "{% $string($millis() + 600000) %}"
+                  }
+              },
+              "ReturnValues": "ALL_OLD"
+            },
+            "Assign": {
+              "now": "{% $millis() %}",
+              "previousStop": "{% $number(ServiceStop.N) %}",
+              "shouldStart": "{% $number(ServiceStop.N) < $millis() %}"
+            },
+            "Next": "Decide"
+        },
+        "Decide": {
+          "Type": "Choice",
+          "Choices": [
+            {
+              "Next": "StartService",
+              "Condition": "{% $shouldStart %}"
+            }
+          ],
+          "Default": "SkipStart"
+        },
+        "StartService": {
+          "Type": "Pass",
+          "End": true
+        },
+        "SkipStart": {
+          "Type": "Pass",
+          "End": true
+        }
+    }
+}
