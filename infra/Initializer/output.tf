@@ -10,3 +10,9 @@ output "webapp_role_name" {
 output "webapp_role_arn" {
   value = module.ecr.webapp_role_arn
 }
+output "tester_role_name" {
+  value = local.tester_role_name
+}
+output "tester_role_arn" {
+  value = module.ecr.tester_role_arn
+}

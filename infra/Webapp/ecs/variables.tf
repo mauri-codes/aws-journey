@@ -37,13 +37,7 @@ variable "subdomain_cert_arn" {
 variable "webapp_repo_url" {
   type = string
 }
-variable "zone_id" {
-  type = string
-}
 variable "domain_name" {
-  type = string
-}
-variable "lb_dns_name" {
   type = string
 }
 variable "lb_sg_id" {
@@ -51,9 +45,6 @@ variable "lb_sg_id" {
 }
 variable "subnets" {
   type = list(string)
-}
-variable "lb_zone_id" {
-  type = string
 }
 variable "region" {
   type = string

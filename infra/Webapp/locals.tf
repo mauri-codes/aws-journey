@@ -9,10 +9,6 @@ locals {
   app_name                = data.aws_ssm_parameter.app_name.value
   domain_name             = data.aws_ssm_parameter.domain_name.value
   cluster_id              = data.terraform_remote_state.ecs_cluster.outputs.cluster_id
-  alb_id                  = data.terraform_remote_state.ecs_cluster.outputs.lb_id
-  lb_dns_name             = data.terraform_remote_state.ecs_cluster.outputs.lb_dns_name
-  lb_sg_id                = data.terraform_remote_state.ecs_cluster.outputs.lb_sg_id
-  lb_zone_id              = data.terraform_remote_state.ecs_cluster.outputs.lb_zone_id
   vpc_id                  = data.terraform_remote_state.network.outputs.vpc_id
   domain_cert_arn         = data.terraform_remote_state.dns.outputs.domain_certificate_arn
   subdomain_cert_arn      = data.terraform_remote_state.dns.outputs.subdomain_certificate_arn

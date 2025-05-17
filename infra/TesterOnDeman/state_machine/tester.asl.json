@@ -14,19 +14,18 @@
               "UpdateExpression": "SET ServiceStop = :newStop",
               "ExpressionAttributeValues": {
                   ":newStop": {
-                      "N": "{% $string($millis() + 600000) %}"
+                      "N": "{% $string($millis() + ${TimeoutMilliseconds}) %}"
                   }
               },
               "ReturnValues": "ALL_OLD"
             },
             "Assign": {
-              "now": "{% $millis() %}",
-              "previousStop": "{% $number(ServiceStop.N) %}",
-              "shouldStart": "{% $number(ServiceStop.N) < $millis() %}"
+                "shouldStart": "{% $number($states.result.Attributes.ServiceStop.N) < $millis() %}",
+                "serviceStart": "{% $number($states.result.Attributes.ServiceStarted.N) %}"
             },
-            "Next": "Decide"
+            "Next": "ShouldServiceStart"
         },
-        "Decide": {
+        "ShouldServiceStart": {
           "Type": "Choice",
           "Choices": [
             {
@@ -34,14 +33,73 @@
               "Condition": "{% $shouldStart %}"
             }
           ],
-          "Default": "SkipStart"
+          "Assign": {
+              "serviceStart": "{% $serviceStart %}"
+          },
+          "Default": "ShouldMessageWait"
         },
         "StartService": {
-          "Type": "Pass",
-          "End": true
+          "Type": "Task",
+          "Resource": "arn:aws:states:::aws-sdk:ecs:updateService",
+          "Arguments": {
+            "Cluster": "${ClusterName}",
+            "Service": "${ServiceName}",
+            "DesiredCount": 1
+          },
+          "Next": "UpdateServiceStart"
         },
-        "SkipStart": {
-          "Type": "Pass",
+        "UpdateServiceStart": {
+            "Type": "Task",
+            "Resource": "arn:aws:states:::aws-sdk:dynamodb:updateItem",
+            "Arguments": {
+              "TableName": "${TableName}",
+              "Key": {
+                  "pk": { "S": "tester" },
+                  "sk": { "S": "activity" }
+              },
+              "UpdateExpression": "SET ServiceStarted = :newStart",
+              "ExpressionAttributeValues": {
+                  ":newStart": {
+                      "N": "{% $string($millis()) %}"
+                  }
+              },
+              "ReturnValues": "UPDATED_NEW"
+            },
+            "Assign": {
+                "serviceStart": "{% $number($states.result.Attributes.ServiceStarted.N) %}"
+            },
+            "Next": "ShouldMessageWait"
+        },
+        "ShouldMessageWait": {
+          "Type": "Choice",
+          "Choices": [
+            {
+              "Next": "MessageWait",
+              "Condition": "{% $serviceStart + 7000 > $millis() %}"
+            }
+          ],
+          "Assign": {
+              "serviceStart": "{% $serviceStart %}",
+              "all": "{% $states %}"
+          },
+          "Default": "SendSqsMessage"
+        },
+        "MessageWait": {
+          "Type": "Wait",
+          "Seconds": 7,
+          "Next": "SendSqsMessage"
+        },
+        "SendSqsMessage": {
+          "Type": "Task",
+          "Resource": "arn:aws:states:::sqs:sendMessage.waitForTaskToken",
+          "Arguments": {
+            "QueueUrl": "${QueueUrl}",
+            "MessageBody": {
+              "taskToken": "$$Task.Token",
+              "User": "user1",
+              "Lab": "lab1"
+            }
+          },
           "End": true
         }
     }

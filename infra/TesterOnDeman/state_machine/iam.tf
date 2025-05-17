@@ -38,10 +38,29 @@ resource "aws_iam_policy" "lambda_access" {
       {
         Action = [
           "dynamodb:UpdateItem",
+          "dynamodb:GetItem",
         ]
         Effect = "Allow"
         Resource = [
           "arn:aws:dynamodb:${var.region}:${var.account_id}:table/${var.table_name}"
+        ]
+      },
+      {
+        Action = [
+          "ecs:UpdateService"
+        ]
+        Effect = "Allow"
+        Resource = [
+          var.service_arn
+        ]
+      },
+      {
+        Action = [
+          "sqs:SendMessage"
+        ]
+        Effect = "Allow"
+        Resource = [
+          var.queue_arn
         ]
       }
     ]

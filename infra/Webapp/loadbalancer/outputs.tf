@@ -1,6 +1,4 @@
-output "cluster_id" {
-  value = aws_ecs_cluster.cluster.id
-}
+
 output "lb_id" {
   value = aws_lb.lb.id
 }
