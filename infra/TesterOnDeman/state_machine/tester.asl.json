@@ -1,8 +1,8 @@
 {
-    "QueryLanguage": "JSONata",
     "StartAt": "UpdateDeploymentState",
     "States": {
         "UpdateDeploymentState": {
+            "QueryLanguage": "JSONata",
             "Type": "Task",
             "Resource": "arn:aws:states:::aws-sdk:dynamodb:updateItem",
             "Arguments": {
@@ -26,6 +26,7 @@
             "Next": "ShouldServiceStart"
         },
         "ShouldServiceStart": {
+          "QueryLanguage": "JSONata",
           "Type": "Choice",
           "Choices": [
             {
@@ -39,6 +40,7 @@
           "Default": "ShouldMessageWait"
         },
         "StartService": {
+          "QueryLanguage": "JSONata",
           "Type": "Task",
           "Resource": "arn:aws:states:::aws-sdk:ecs:updateService",
           "Arguments": {
@@ -49,6 +51,7 @@
           "Next": "UpdateServiceStart"
         },
         "UpdateServiceStart": {
+            "QueryLanguage": "JSONata",
             "Type": "Task",
             "Resource": "arn:aws:states:::aws-sdk:dynamodb:updateItem",
             "Arguments": {
@@ -66,11 +69,12 @@
               "ReturnValues": "UPDATED_NEW"
             },
             "Assign": {
-                "serviceStart": "{% $number($states.result.Attributes.ServiceStarted.N) %}"
+              "serviceStart": "{% $number($states.result.Attributes.ServiceStarted.N) %}"
             },
             "Next": "ShouldMessageWait"
         },
         "ShouldMessageWait": {
+          "QueryLanguage": "JSONata",
           "Type": "Choice",
           "Choices": [
             {
@@ -85,19 +89,21 @@
           "Default": "SendSqsMessage"
         },
         "MessageWait": {
+          "QueryLanguage": "JSONata",
           "Type": "Wait",
           "Seconds": 7,
           "Next": "SendSqsMessage"
         },
         "SendSqsMessage": {
+          "QueryLanguage": "JSONPath",
           "Type": "Task",
           "Resource": "arn:aws:states:::sqs:sendMessage.waitForTaskToken",
-          "Arguments": {
+          "Parameters": {
             "QueueUrl": "${QueueUrl}",
             "MessageBody": {
-              "taskToken": "$$Task.Token",
-              "User": "user1",
-              "Lab": "lab1"
+              "StepFunctionToken.$": "$$.Task.Token",
+              "someValue.$": "$",
+              "input.$": "$$.Execution.Input"
             }
           },
           "End": true

@@ -37,7 +37,7 @@ resource "aws_ecs_task_definition" "app" {
           value = var.queue_url
         },
         {
-          name = "TIMEOUT_MIN"
+          name = "IDLE_TIMEOUT_MIN"
           value = var.worker_timeout
         },
         {
@@ -47,6 +47,10 @@ resource "aws_ecs_task_definition" "app" {
         {
           name = "SERVICE_NAME"
           value = local.app_name_lower
+        },
+        {
+          name = "CLUSTER_NAME"
+          value = var.cluster_name
         }
       ]
     }

@@ -17,7 +17,8 @@ data "aws_iam_policy_document" "ecs_task_role_policy" {
   statement {
     effect = "Allow"
     actions = [
-        "ecs:UpdateService"
+        "ecs:UpdateService",
+        "ecs:DescribeServices"
     ]
     resources = [
       aws_ecs_service.app.id
@@ -31,6 +32,16 @@ data "aws_iam_policy_document" "ecs_task_role_policy" {
     ]
     resources = [
       var.queue_arn
+    ]
+  }
+  statement {
+    effect = "Allow"
+    actions = [
+      "states:SendTaskSuccess",
+      "states:SendTaskFailure"
+    ]
+    resources = [
+      "*"
     ]
   }
 }
