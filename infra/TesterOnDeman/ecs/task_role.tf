@@ -8,7 +8,9 @@ data "aws_iam_policy_document" "ecs_task_role_policy" {
   statement {
     effect = "Allow"
     actions = [
-        "dynamodb:GetItem"
+        "dynamodb:GetItem",
+        "dynamodb:PutItem",
+        "dynamodb:UpdateItem"
     ]
     resources = [
       var.table_arn
@@ -42,6 +44,14 @@ data "aws_iam_policy_document" "ecs_task_role_policy" {
     ]
     resources = [
       "*"
+    ]
+  }
+  
+  statement {
+    effect  = "Allow"
+    actions = ["sts:AssumeRole"]
+    resources = [
+      "arn:aws:iam::*:role/*",
     ]
   }
 }

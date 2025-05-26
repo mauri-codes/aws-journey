@@ -86,12 +86,41 @@
               "serviceStart": "{% $serviceStart %}",
               "all": "{% $states %}"
           },
-          "Default": "SendSqsMessage"
+          "Default": "QueryUserEnvironments"
         },
         "MessageWait": {
           "QueryLanguage": "JSONata",
           "Type": "Wait",
           "Seconds": 7,
+          "Next": "QueryUserEnvironments"
+        },
+        "QueryUserEnvironments": {
+          "QueryLanguage": "JSONata",
+          "Type": "Task",
+          "Resource": "arn:aws:states:::aws-sdk:dynamodb:query",
+          "Arguments": {
+            "TableName": "${TableName}",
+            "KeyConditionExpression": "#pk = :pkval",
+            "ExpressionAttributeNames": {
+              "#pk": "pk"
+            },
+            "ExpressionAttributeValues": {
+              ":pkval": {
+                "S": "{% $join(['user_', $states.context.Execution.Input.User, '#environments']) %}"
+              }
+            }
+          },
+          "Next": "SelectData"
+        },
+        "SelectData": {
+          "QueryLanguage": "JSONata",
+          "Type": "Pass",
+          "Output": {
+            "RoleA": "{% $states.input.Items[EnvironmentName.S=$states.context.Execution.Input.Environments.A].TesterRole.S %}",
+            "RoleB": "{% $exists($states.context.Execution.Input.Environments.B) ? $states.input.Items[EnvironmentName.S=$states.context.Execution.Input.Environments.B].TesterRole.S : '' %}",
+            "RegionA": "{% $states.input.Items[0].Region.S %}",
+            "RegionB": "{% $states.input.Items[0].Region2.S %}"
+          },
           "Next": "SendSqsMessage"
         },
         "SendSqsMessage": {
@@ -101,9 +130,12 @@
           "Parameters": {
             "QueueUrl": "${QueueUrl}",
             "MessageBody": {
-              "StepFunctionToken.$": "$$.Task.Token",
-              "someValue.$": "$",
-              "input.$": "$$.Execution.Input"
+              "StepFunctionsToken.$": "$$.Task.Token",
+              "Payload": {
+                "Input.$": "$$.Execution.Input",
+                "Environment.$": "$"
+              }
+              
             }
           },
           "End": true
