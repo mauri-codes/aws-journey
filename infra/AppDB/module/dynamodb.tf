@@ -6,6 +6,11 @@ resource "aws_dynamodb_table" "aws-journey" {
   hash_key       = "pk"
   range_key      = "sk"
 
+  ttl {
+    attribute_name = "TTL"
+    enabled        = true
+  }
+
   attribute {
     name = "pk"
     type = "S"

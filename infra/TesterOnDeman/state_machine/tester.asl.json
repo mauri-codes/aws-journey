@@ -119,7 +119,8 @@
             "RoleA": "{% $states.input.Items[EnvironmentName.S=$states.context.Execution.Input.Environments.A].TesterRole.S %}",
             "RoleB": "{% $exists($states.context.Execution.Input.Environments.B) ? $states.input.Items[EnvironmentName.S=$states.context.Execution.Input.Environments.B].TesterRole.S : '' %}",
             "RegionA": "{% $states.input.Items[0].Region.S %}",
-            "RegionB": "{% $states.input.Items[0].Region2.S %}"
+            "RegionB": "{% $states.input.Items[0].Region2.S %}",
+            "ExecutionId": "{% $split($states.context.Execution.Id, ':')[7] %}"
           },
           "Next": "SendSqsMessage"
         },
@@ -132,7 +133,13 @@
             "MessageBody": {
               "StepFunctionsToken.$": "$$.Task.Token",
               "Payload": {
-                "Input.$": "$$.Execution.Input",
+                "Input": {
+                  "Lab.$": "$$.Execution.Input.Lab",
+                  "User.$": "$$.Execution.Input.User",
+                  "Stage.$": "$$.Execution.Input.Stage",
+                  "Path.$": "$$.Execution.Input.Path",
+                  "ExecutionId.$": "$.ExecutionId"
+                },
                 "Environment.$": "$"
               }
               

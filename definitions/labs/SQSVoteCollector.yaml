@@ -2,6 +2,7 @@
 Id: SQSVoteCollector
 Title: SQS Vote Collector
 SubTitle: Voting App
+LabPath: SQSVoteCollector.yaml
 Overview:
   - >
     In this lab you'll build a SQS queue that receives votes and send them to 

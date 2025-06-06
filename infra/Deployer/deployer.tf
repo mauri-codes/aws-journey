@@ -34,3 +34,9 @@ module "step_function" {
   error_handler_lambda_arn    = "arn:aws:lambda:${local.region}:${local.account_id}:function:${local.deployment_error_lambda_name}"
   depends_on                  = [module.lambdas]
 }
+
+resource "aws_ssm_parameter" "state_machine_arn" {
+  name  = "/Infra/Deployer/StepFunctions/Arn"
+  type  = "String"
+  value = module.step_function.state_machine_arn
+}

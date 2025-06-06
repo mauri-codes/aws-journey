@@ -54,3 +54,9 @@ resource "aws_ssm_parameter" "ecs_service_name" {
   type  = "String"
   value = module.ecs.service_name
 }
+
+resource "aws_ssm_parameter" "state_machine_arn" {
+  name  = "/Infra/Tester/StepFunctions/Arn"
+  type  = "String"
+  value = module.step_function.state_machine_arn
+}
