@@ -66,3 +66,21 @@ data "terraform_remote_state" "dns" {
     region = "us-east-1"
   }
 }
+
+data "terraform_remote_state" "tester" {
+  backend = "s3"
+  config = {
+    bucket = data.aws_ssm_parameter.state_bucket_name.value
+    key    = "terraform/TesterOnDeman.tfstate"
+    region = "us-east-1"
+  }
+}
+
+data "terraform_remote_state" "deployer" {
+  backend = "s3"
+  config = {
+    bucket = data.aws_ssm_parameter.state_bucket_name.value
+    key    = "terraform/Deployer.tfstate"
+    region = "us-east-1"
+  }
+}

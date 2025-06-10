@@ -28,6 +28,9 @@ variable "task_execution_role_arn" {
 variable "region" {
   type = string
 }
+variable "account_id" {
+  type = string
+}
 variable "vpc_id" {
   type = string
 }
@@ -41,5 +44,8 @@ variable "worker_timeout" {
   type = string
 }
 variable "worker_max_concurrency" {
+  type = string
+}
+variable "state_machine_name" {
   type = string
 }

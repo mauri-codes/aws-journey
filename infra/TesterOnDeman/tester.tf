@@ -15,6 +15,8 @@ module "ecs" {
   worker_timeout           = local.worker_timeout_min
   queue_url                = local.queue_url
   vpc_id                   = local.vpc_id
+  account_id               = local.account_id
+  state_machine_name       = local.state_machine_name
 }
 
 module "step_function" {

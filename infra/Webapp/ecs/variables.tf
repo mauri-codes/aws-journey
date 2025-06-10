@@ -49,3 +49,15 @@ variable "subnets" {
 variable "region" {
   type = string
 }
+variable "tester_step_functions_arn" {
+  type = string
+}
+variable "deployer_step_functions_arn" {
+  type = string
+}
+variable "tester_step_functions_param" {
+  type = string
+}
+variable "deployer_step_functions_param" {
+  type = string
+}

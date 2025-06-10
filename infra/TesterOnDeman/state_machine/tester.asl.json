@@ -138,6 +138,7 @@
                   "User.$": "$$.Execution.Input.User",
                   "Stage.$": "$$.Execution.Input.Stage",
                   "Path.$": "$$.Execution.Input.Path",
+                  "Parameters.$": "$$.Execution.Input.Parameters",
                   "ExecutionId.$": "$.ExecutionId"
                 },
                 "Environment.$": "$"

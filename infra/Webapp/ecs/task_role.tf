@@ -11,10 +11,31 @@ data "aws_iam_policy_document" "ecs_task_role_policy" {
         "dynamodb:PutItem",
         "dynamodb:GetItem",
         "dynamodb:Query",
-        "dynamodb:UpdateItem"
+        "dynamodb:UpdateItem",
+        "dynamodb:DeleteItem"
     ]
     resources = [
       var.table_arn
+    ]
+  }
+  statement {
+    effect = "Allow"
+    actions = [
+        "ssm:GetParameter"
+    ]
+    resources = [
+      var.tester_step_functions_param,
+      var.deployer_step_functions_param
+    ]
+  }
+  statement {
+    effect = "Allow"
+    actions = [
+        "states:StartExecution"
+    ]
+    resources = [
+      var.tester_step_functions_arn,
+      var.deployer_step_functions_arn
     ]
   }
 }
