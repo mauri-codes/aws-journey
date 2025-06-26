@@ -1,0 +1,3 @@
+variable "labName" {
+  type = string
+}
