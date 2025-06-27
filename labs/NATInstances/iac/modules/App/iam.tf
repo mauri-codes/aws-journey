@@ -16,7 +16,6 @@ resource "aws_iam_role" "ec2_role" {
 resource "aws_iam_role_policy_attachment" "s3_readonly" {
   role       = aws_iam_role.ec2_role.name
   policy_arn = aws_iam_policy.s3_policy.arn
-  # policy_arn = "arn:aws:iam::aws:policy/AmazonS3ReadOnlyAccess"
 }
 
 resource "aws_iam_role_policy_attachment" "session_manager" {
@@ -30,7 +29,7 @@ resource "aws_iam_instance_profile" "ec2_profile" {
 }
 
 resource "aws_iam_policy" "s3_policy" {
-  name = "policy-618033"
+  name = "${var.instance_name}Policy"
 
   policy = jsonencode({
     Version = "2012-10-17",
