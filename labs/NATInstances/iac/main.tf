@@ -40,7 +40,7 @@ module "app" {
   alb_sg_name   = "${local.labName}_ALB_SG_${var.suffix}"
   instance_type = local.instance_type
   instance_name = "App"
-  key_pair      = var.key_pair
+  key_pair      = var.KeyPair
   instance_ami  = local.al2023
   public_subnets = [
     module.vpc.subnet_ids["${local.labName}-web-A"],
@@ -66,7 +66,7 @@ module "nat" {
   subnet_B         = module.vpc.subnet_ids["${local.labName}-web-B"]
   subnet_C         = module.vpc.subnet_ids["${local.labName}-web-C"]
   instance_ami     = local.al2023
-  key_pair         = var.key_pair
+  key_pair         = var.KeyPair
   instance_type    = local.instance_type
   private_cidr     = local.vpc_cidr
   role_name        = module.instance_role.role_name

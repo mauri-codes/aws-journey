@@ -1,5 +1,5 @@
 locals {
-  labName       = var.name
+  labName       = var.LabName
   al2023        = data.aws_ssm_parameter.al2023.value
   instance_type = "t2.micro"
   vpc_cidr      = "10.16.0.0/16"

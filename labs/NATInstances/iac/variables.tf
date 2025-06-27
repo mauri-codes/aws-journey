@@ -8,12 +8,12 @@ variable "suffix" {
   default = ""
 }
 
-variable "key_pair" {
+variable "KeyPair" {
   type    = string
   default = "awsjourney"
 }
 
-variable "name" {
+variable "LabName" {
   type    = string
   default = "lab02"
 }
