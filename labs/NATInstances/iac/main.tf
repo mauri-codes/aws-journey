@@ -39,7 +39,7 @@ module "app" {
   ]
   alb_sg_name   = "${local.labName}_ALB_SG_${var.suffix}"
   instance_type = local.instance_type
-  instance_name = "${local.labName}_App${var.suffix}"
+  instance_name = "${local.labName}App${var.suffix}"
   key_pair      = var.KeyPair
   instance_ami  = local.al2023
   public_subnets = [
