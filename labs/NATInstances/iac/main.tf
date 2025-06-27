@@ -59,7 +59,7 @@ module "app" {
 }
 
 module "nat" {
-  source           = "./modules/NatInstances"
+  source           = "./modules/NATInstances"
   count            = local.is_solution ? 1 : 0
   vpc_id           = module.vpc.vpc_id
   subnet_A         = module.vpc.subnet_ids["${local.labName}-web-A"]
