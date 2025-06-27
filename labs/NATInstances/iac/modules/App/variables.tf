@@ -25,3 +25,9 @@ variable "instance_type" {
 variable "instance_ami" {
   type = string
 }
+variable "is_solution" {
+  type = bool
+}
+variable "key_pair" {
+  type = string
+}

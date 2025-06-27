@@ -11,6 +11,6 @@ resource "aws_route" "nat_b" {
 resource "aws_route" "nat_c" {
   route_table_id         = var.route_table_c_id
   destination_cidr_block = "0.0.0.0/0"
-  
-  network_interface_id   = aws_instance.nat["C"].primary_network_interface_id
+
+  network_interface_id = aws_instance.nat["C"].primary_network_interface_id
 }

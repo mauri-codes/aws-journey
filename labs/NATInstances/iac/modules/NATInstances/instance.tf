@@ -6,8 +6,8 @@ resource "aws_instance" "nat" {
   subnet_id                   = each.value
   vpc_security_group_ids      = [aws_security_group.nat_sg.id]
   associate_public_ip_address = true
-
-  source_dest_check = false
+  key_name = var.key_pair
+  source_dest_check    = false
   iam_instance_profile = aws_iam_instance_profile.nat_profile.name
 
   user_data = <<-EOF
@@ -34,18 +34,3 @@ resource "aws_iam_instance_profile" "nat_profile" {
   name = "NAT_Profile"
   role = var.role_name
 }
-
-
-  # user_data = <<-EOF
-  #   #!/bin/bash
-  #   sysctl -w net.ipv4.ip_forward=1
-  #   echo 'net.ipv4.ip_forward = 1' >> /etc/sysctl.conf
-
-  #   iptables -t nat -A POSTROUTING -o eth0 -j MASQUERADE
-
-  #   # Save iptables rules persistently
-  #   yum install -y iptables-services
-  #   service iptables save
-  #   systemctl enable iptables
-  #   systemctl start iptables
-  # EOF

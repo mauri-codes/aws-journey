@@ -4,7 +4,7 @@ resource "random_pet" "suffix" {
 
 resource "aws_s3_bucket" "resources" {
   force_destroy = true
-  bucket = "${var.labName}-${random_pet.suffix.id}"
+  bucket        = "${var.labName}-${random_pet.suffix.id}"
 }
 
 resource "aws_s3_object" "app_binary" {

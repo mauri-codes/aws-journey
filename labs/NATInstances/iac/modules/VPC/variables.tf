@@ -1,12 +1,12 @@
 variable "vpc_cidr_block" {
-  type = string
+  type    = string
   default = "10.16.0.0/16"
 }
 variable "subnet_prefix" {
-  type = string 
+  type = string
 }
 variable "suffix" {
-  type = string 
+  type = string
 }
 variable "subnet_definition" {
   type = map(object({
@@ -16,18 +16,21 @@ variable "subnet_definition" {
   default = null
 }
 variable "public_ig_route" {
-  type = bool
+  type    = bool
   default = true
 }
 variable "vpc_name" {
-  type = string 
+  type = string
 }
 variable "ig_name" {
-  type = string 
+  type = string
 }
 variable "public_rt_name" {
-  type = string 
+  type = string
 }
 variable "private_rt_name" {
-  type = string 
+  type = string
+}
+variable "is_solution" {
+  type = bool
 }

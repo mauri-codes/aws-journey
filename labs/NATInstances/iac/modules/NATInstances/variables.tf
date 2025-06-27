@@ -34,3 +34,6 @@ variable "route_table_b_id" {
 variable "route_table_c_id" {
   type = string
 }
+variable "key_pair" {
+  type = string
+}

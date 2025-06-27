@@ -18,6 +18,7 @@ resource "aws_launch_template" "app_lt" {
       bucket_name = var.bucket_name
     })
   )
+  key_name = var.key_pair
 
   tag_specifications {
     resource_type = "instance"
@@ -28,10 +29,10 @@ resource "aws_launch_template" "app_lt" {
 }
 
 resource "aws_autoscaling_group" "app_asg" {
-  name                = "${var.instance_name}ASG"
-  desired_capacity    = 3
-  max_size            = 3
-  min_size            = 1
+  name             = "${var.instance_name}ASG"
+  desired_capacity = 3
+  max_size         = 3
+  min_size         = 1
 
   vpc_zone_identifier = var.private_subnets
   target_group_arns   = [aws_lb_target_group.app_tg.arn]
