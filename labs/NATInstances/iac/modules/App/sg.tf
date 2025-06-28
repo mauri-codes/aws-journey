@@ -17,6 +17,15 @@ resource "aws_vpc_security_group_ingress_rule" "from_alb" {
   ip_protocol                  = "tcp"
 }
 
+resource "aws_vpc_security_group_ingress_rule" "from_alb" {
+  count             = var.is_solution ? 0 : 1
+  security_group_id = aws_security_group.instance_sg.id
+  cidr_ipv4         = "0.0.0.0/0"
+  from_port         = 80
+  to_port           = 80
+  ip_protocol       = "tcp"
+}
+
 resource "aws_vpc_security_group_egress_rule" "internet_access" {
   security_group_id = aws_security_group.instance_sg.id
 
