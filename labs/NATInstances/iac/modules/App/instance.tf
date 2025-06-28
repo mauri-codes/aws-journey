@@ -10,7 +10,7 @@ resource "aws_launch_template" "app_lt" {
 
   network_interfaces {
     security_groups             = [aws_security_group.instance_sg.id]
-    associate_public_ip_address = false
+    associate_public_ip_address = true
   }
 
   user_data = base64encode(
@@ -34,7 +34,7 @@ resource "aws_autoscaling_group" "app_asg" {
   max_size         = 3
   min_size         = 1
 
-  vpc_zone_identifier = var.private_subnets
+  vpc_zone_identifier = var.public_subnets
   target_group_arns   = [aws_lb_target_group.app_tg.arn]
 
   launch_template {
